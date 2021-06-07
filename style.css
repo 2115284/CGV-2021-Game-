@@ -1,0 +1,168 @@
+body,html {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+}
+
+canvas {
+	display: block;
+}
+
+
+
+body {
+	background-image: url('img/hot_up.png');
+	cursor: crosshair;
+	font-family: Georgia, Helvetica, sans-serif;
+	font-weight: bold;
+	margin: 0;
+	overflow: hidden;
+	padding: 0;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#hud {
+	bottom: 10px;
+	position: absolute;
+	right: 10px;
+	z-index: 100;
+}
+#radar {
+	background-color: #EEEEEE;
+	border: 1px solid black;
+	bottom: 10px;
+	left: 10px;
+	position: absolute;
+	z-index: 100;
+}
+#intro {
+	background-color: #000000;
+	color: #FFFFFF;
+	cursor: pointer;
+	font-size: 32px;
+	opacity: 0.7;
+	padding: 120px;
+	text-align: center;
+	z-index: 1001;
+}
+#hurt {
+	background-color: red;
+	display: none;
+	left: 0;
+	opacity: 0.15;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	z-index: 1002;
+}
+#load-screen {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background: #000000;
+	z-index: 100;
+	transition: top 1s;
+}
+
+
+
+#load-screen div {
+	animation: spin 1s infinite;
+	border: dashed 5px rgba(255,255,255,0.5);
+	border-radius: 100%;
+	height: 50px;
+	left: calc(50% - 25px);
+	position: relative;
+	top: calc(50% - 25px);
+	width: 50px;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
+}
+
+.hidden {
+	top: -100% !important;
+}
+
+#startScreen {
+  margin: auto;
+  margin-top: 50px;
+  position: relative;
+  width: 300px;
+  height: 200px;
+  background-color: whitesmoke;
+  color: #333;
+  text-align: center;
+  border: 8px solid;
+  border-radius: 10px;
+  box-shadow: 0 1px 32px white;
+  transform: rotate(0) scale(0);
+  animation: boom 1s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes boom {
+  100% {
+    transform: rotate(1080deg) scale(1);
+  }
+}
+
+#startScreen div {
+  height: 50%;
+}
+
+#startScreen h1 {
+  position:absolute;
+  width: 100%;
+  color: #222;
+  font-size: 40px;
+  text-shadow: 0 1px 2px;
+  animation: pulse 6s linear infinite;
+}
+
+@keyframes pulse {
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+#startScreen p {
+  font-weight: bold;
+}
+
+#startScreen span {
+  position: relative;
+  font-size: 18px;
+  animation: up 2s linear infinite;
+  animation-delay: 3s;
+}
+
+@keyframes up {
+  25% {
+    top: -4px;
+  }
+}
+
+#gameOn {
+  font-size: 100px;
+  text-align: center;
+  text-shadow: 0 2px 0 limegreen, 0 1px 64px white;
+  animation: pulse 1.5s linear infinite;
+}
