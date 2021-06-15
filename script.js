@@ -265,7 +265,7 @@ loadEnvironment=function(LoadingManager){
 loader=new THREE.FBXLoader();
 	loader.load( "/environment.fbx", function ( object ) {
 		game.scene.add(object);
-    object.scale.set(0.0064,0.0064,0.0064);
+    object.scale.set(0.01,0.01,0.01);
 		object.receiveShadow = true;
 		object.name = "Environment";
 
