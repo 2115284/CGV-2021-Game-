@@ -265,7 +265,7 @@ loadEnvironment=function(LoadingManager){
 loader=new THREE.FBXLoader();
 	loader.load( "/environment.fbx", function ( object ) {
 		game.scene.add(object);
-    object.scale.set(0.04,0.04,0.04);
+    object.scale.set(0.0064,0.0064,0.0064);
 		object.receiveShadow = true;
 		object.name = "Environment";
 
@@ -434,9 +434,9 @@ animate = function () {
         controls.getObject().position.x += Math.sin(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
         controls.getObject().position.z += Math.cos(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
     }
-  
+
     if(keyboard[67]){//C key
-        
+
     }
 
 
@@ -460,7 +460,7 @@ animate = function () {
         player.speed = 0.025;
     }
     renderer.render(scene, camera);
-    
+
 
 };
 
@@ -489,32 +489,32 @@ window.addEventListener("keydown", function (e) {
 });
 
 window.addEventListener("keyup", function (e) {
-     
+
     console.log("keyboarda"+e.keyCode);
     //EventListener for the [P] key which pauses or resumes the game depending on its state.
     if(e.keyCode==80){
         console.log("keyboarda"+e.keyCode);
-        if(paused && started){        
+        if(paused && started){
             //animate=true;
-            document.getElementById("pauseMenu").style.display = "none";   
+            document.getElementById("pauseMenu").style.display = "none";
             document.getElementById("pause").classList.remove("hidden");
             document.getElementById("info14").style.display = "block";
-            document.getElementById("pause").style.cursor = "default";   
+            document.getElementById("pause").style.cursor = "default";
             console.log("keyboard[76]"+keyboard[80]);
             console.log("keyboard[9009]"+keyboard[80]);
             //document.getElementById("pauseMenu").style.display = "none";
             paused = false;
             requestAnimationFrame(animate);
             //animate();
-            //init();   
+            //init();
         }else if(!paused && started){
-                    
+
             document.getElementById("pauseMenu").style.display = "block";
             document.getElementById("close").style.display = "none";
             document.getElementById("info1").style.display = "none";
             document.getElementById("info14").style.display = "none";
             document.getElementById("pause").classList.add("hidden");
-            
+
             paused = true;
         }
     }
@@ -522,20 +522,20 @@ window.addEventListener("keyup", function (e) {
     //EventListener when the [C] key is pressed which closes and opens the game info depending on its state.
     if(e.keyCode==67){
         console.log("keyboarda"+e.keyCode);
-        if(info && started){        
-            
+        if(info && started){
+
              document.getElementById("info14").style.display = "block";
              document.getElementById("info1").style.display = "none";
              document.getElementById("close").style.display = "none";
-        
+
             info = false;
-            
+
         }else if(!info && started){
-                    
+
             document.getElementById("info14").style.display = "none";
             document.getElementById("info1").style.display = "block";
             document.getElementById("close").style.display = "block";
-            
+
             info = true;
         }
     }
@@ -564,7 +564,7 @@ window.addEventListener("resize", function (e) {
 
 //Pausing the game anytime during play.
 pauseGame = function(){
-    
+
     document.getElementById("pauseMenu").style.display = "block";
     document.getElementById("close").style.display = "none";
     document.getElementById("info1").style.display = "none";
@@ -577,8 +577,8 @@ pauseGame = function(){
 resumeGame = function(){
 
     //animate=true;
-    document.getElementById("pauseMenu").style.display = "none"; 
-    document.getElementById("info14").style.display = "block";  
+    document.getElementById("pauseMenu").style.display = "none";
+    document.getElementById("info14").style.display = "block";
     document.getElementById("pause").classList.remove("hidden");
     console.log("keyboard[76]"+keyboard[80]);
     console.log("keyboard[76]"+keyboard[80]);
@@ -586,7 +586,7 @@ resumeGame = function(){
     paused = false;
     requestAnimationFrame(animate);
     //animate();
-    //init();   
+    //init();
 }
 
 //restarting the game from any position during gameplay
@@ -608,11 +608,11 @@ startGame = function(){
 //Quits the game and goes back to Start Menu
 quitGame = function(){
 
-    
+
     location.href="index.html"
    /* console.log("clear Render")
     paused = true;
-    
+
 	scene.add(controls.getObject());
     controls.getObject().position.set(0, player.height, -4.5);
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
@@ -626,12 +626,12 @@ quitGame = function(){
 
     //skybox.dispose()
     //var obj = renderer.getSize();
-    /*while(scene.children.length > 0){ 
-        scene.remove(scene.children[0]); 
+    /*while(scene.children.length > 0){
+        scene.remove(scene.children[0]);
     }
 
     scene.clear();*/
-    
+
     //init();
     //requestAnimationFrame(animate);
 
@@ -679,12 +679,11 @@ gameInfo = function(){
     document.getElementById("info1").style.display = "block";
     document.getElementById("close").style.display = "block";
 }
-/*var gameObj = "Hey gamer, welcome to Shooter. The game objective is" + 
+/*var gameObj = "Hey gamer, welcome to Shooter. The game objective is" +
  "pretty simple, Kill the zombies before they kill you. Yes, that simple." +
-  "Here is how it goes, the zombies will come your way, whether you decide " + 
-  "to run, hide or I don't know what, they will find you and they will kill you." + 
-  "The more you run, the more zombies there'll be and trust me you don't wanna deal" + 
+  "Here is how it goes, the zombies will come your way, whether you decide " +
+  "to run, hide or I don't know what, they will find you and they will kill you." +
+  "The more you run, the more zombies there'll be and trust me you don't wanna deal" +
   "with hundreds and hundres of zombies, so kill as much as you can as quickly as you can" +
   "under the specified time period";*/
 init();
-
