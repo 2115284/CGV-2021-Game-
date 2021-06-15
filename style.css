@@ -10,7 +10,208 @@ canvas {
 }
 
 
+  #startScreen1 {
+	margin: auto;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-image: url("shooot.jpg");
+	background-color: #222;
+	background-repeat:no-repeat;
+	background-size:cover;
+	color: white;
+	text-align:right;
+	cursor:default ;
+  }
+  
+  body>#startScreen1>button{
+	  top: 2%;
+	  margin: 2%;
+	  cursor: pointer;
+	  width: 300px;
+	  padding:2%;
+	  border-radius: 20px;
+	  background-color: #000000da;
+	  color: #EEEEEE;
+	  align-items: center;
+	  display: block;
+	  
+  }
 
+  #quitMenu{
+	position: fixed;
+	display: none;
+	width: 30%;
+	height: 30%;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	z-index: 2;
+	cursor:default ;
+  }
+  #quitConfirm{
+	position:fixed;
+	background-color: rgba(253, 249, 249, 0.9);
+	display: block;
+	width: 30%;
+    height: 20%;
+	top: 40%;
+	left: 35%;
+	border: 2px solid rgb(0, 0, 0);
+	padding: 10px;
+	border-radius: 35px 15px;
+  }
+
+  #quitMenu>#quitConfirm>h4{
+	
+	  text-align: center;
+	  top:0%;
+	  margin: 0%;
+	  color: whitesmoke;
+	  background-color: rgb(0, 0, 0);
+	  border: 2px solid rgb(0, 0, 0);
+	  padding: 10px;
+	  border-radius: 18px;
+
+  }
+
+  #quitMenu>#quitConfirm>#quitButtons{
+	height: 100%;
+	width: 100%;
+	text-align-last: center;
+	margin-top: 10%;
+  }
+  #quitMenu>#quitConfirm>#quitButtons>button{
+	display: inline-block !important;
+	background-color: black;
+	color: white;
+	padding: 15px;
+	width: 25%;
+	text-align: center;
+	vertical-align: middle;
+	margin: 0% 10% 0% 10%;
+	cursor: pointer;
+	border: 2px solid rgb(0, 0, 0);
+	padding: 10px;
+	border-radius: 35px 15px;
+	text-shadow: 2px 2px #414141;
+	  }
+
+
+ #info14 {
+		position: fixed;
+		display: block;
+		background-color: rgba(247, 247, 247, 0.5);
+		z-index: 2;
+		cursor: pointer;
+		left: 96%;
+		top:0;
+	  }
+
+ #close{
+
+	position: fixed;
+		display: block;
+		background-color: rgba(255, 255, 255, 0.37);
+		z-index: 2;
+		cursor: pointer;
+		left: 96%;
+		top:0;
+ }
+
+	  
+#info1 {
+	position: fixed;
+	display: block;
+	background-color: rgba(3, 3, 3, 0.603);
+	z-index: 2;
+	cursor: pointer;
+	left: 74%;
+	right: 0%;
+	top:4%;
+	color: rgba(0, 128, 0, 0.356);
+	text-align:left;
+	padding: auto;
+  }
+ 
+
+  #pause {
+		position: fixed;
+		display: block;
+		background-color: rgba(0, 0, 0, 0);
+		z-index: 2;
+		cursor: pointer;
+		left: 48.5%;
+		top:0;
+	  }
+	
+	
+ #pauseMenu {
+		position: fixed;
+		display: none;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.8);
+		z-index: 2;
+		cursor:default ;
+	  }
+
+  #pauseMenuContent{
+	position:fixed;
+	background-color: rgba(0, 0, 0, 0.9);
+	display: block;
+	width: 30%;
+    height: 20%;
+	top: 40%;
+	left: 35%;
+	border: 2px solid rgb(161, 161, 161);
+	padding: 10px;
+	border-radius: 18px;
+	
+  }
+
+  #pauseMenu>#pauseMenuContent>h3{
+	  text-align: center;
+	  top:0%;
+	  margin: 0%;
+	  color: rgb(0, 0, 0);
+	  background-color: rgb(155, 155, 155);
+	  border: 2px solid rgb(0, 0, 0);
+	  padding: 10px;
+	  border-radius: 35px 15px;
+	}
+  
+  #pauseMenu>#pauseMenuContent>#pauseMenuButtons{
+
+	  height: 100%;
+	  width: 100%;
+	  text-align-last: center;
+	  margin-top: 10%;
+  }
+
+#pauseMenu>#pauseMenuContent>#pauseMenuButtons>button{
+display: inline-block !important;
+background-color: rgb(184, 184, 184);
+color: rgb(0, 0, 0);
+width: 25%;
+height: 30%;
+padding: 15px;
+text-align:center;
+vertical-align: middle;
+margin: 0% 3% 0% 3%;
+cursor: pointer;
+border: 2px solid rgb(0, 0, 0);
+padding: 10px;
+border-radius: 25px;
+padding: 10px;
+border-radius: 35px 15px;
+text-shadow: 1px 1px #272727;
+  }
 body {
 	background-image: url('img/hot_up.png');
 	cursor: crosshair;
@@ -101,23 +302,6 @@ body {
 	top: -100% !important;
 }
 
-#startScreen {
-  margin: auto;
-  margin-top: 50px;
-  position: relative;
-  width: 300px;
-  height: 200px;
-  background-color: whitesmoke;
-  color: #333;
-  text-align: center;
-  border: 8px solid;
-  border-radius: 10px;
-  box-shadow: 0 1px 32px white;
-  transform: rotate(0) scale(0);
-  animation: boom 1s linear;
-  animation-fill-mode: forwards;
-}
-
 @keyframes boom {
   100% {
     transform: rotate(1080deg) scale(1);
@@ -166,3 +350,79 @@ body {
   text-shadow: 0 2px 0 limegreen, 0 1px 64px white;
   animation: pulse 1.5s linear infinite;
 }
+
+#objectiveContainer{
+	margin: auto;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.781);
+	left: 0%;
+	top: 0%;
+	z-index: 2;
+	cursor:default ;
+	border: 2px solid rgba(0, 0, 0, 0.623);
+	padding: 10px;
+	border-radius: 18px;
+  }
+
+#gameObjective{
+	margin: auto;
+	position: fixed;
+	width: 50%;
+	height: 65%;
+	left: 25%;
+	top: 10%;
+	background-color: rgb(0, 0, 0);
+	color: white;
+	text-align: left;
+	cursor:default ;
+	border: 2px solid rgb(0, 0, 0);
+	padding: 10px;
+	border-radius: 18px;
+}
+#objectiveContainer>#gameObjective>h4{
+	
+	text-align: center;
+	top:3%;
+	left: 3%;
+	right: 3%;
+	bottom: 3%;
+	color: whitesmoke;
+	background-color: rgb(97, 97, 97);
+	border: 2px solid rgb(0, 0, 0);
+	padding: 10px;
+	border-radius: 18px;
+
+}
+#objectiveContainer>#gameObjective>button{
+	
+	background-color: rgb(184, 184, 184);
+	color: hsl(0, 0%, 0%);
+	width: 100%;
+	height: 50px;
+	padding: 15px;
+	text-align: center;
+	vertical-align: middle;
+	margin: 0% 3% 0% 3%;
+	cursor: pointer;
+	border: 2px solid rgb(0, 0, 0);
+	padding: 10px;
+	border-radius: 25px;
+	padding: 10px;
+	border-radius: 35px 15px;
+	text-shadow: 1px 1px #272727;
+	  }
+
+	  #Shooter {
+		position: fixed;
+		display: block;
+		background-color: rgb(3, 3, 3);
+		z-index: 2;
+		cursor: pointer;
+		left: 1%;
+		top:0%;
+		color: rgb(255, 255, 255);
+		text-align:left;
+		padding: auto;
+	  }

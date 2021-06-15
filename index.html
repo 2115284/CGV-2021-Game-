@@ -15,8 +15,74 @@
     <script src="inflate.min.js"></script>
 </head>
 <body>
-    <div id="load-screen"><div>
-    </div id="intro"></div>
-	<script src="script.js"></script>
+  <!--
+  <div id="info"> Press L to Pause the Game </div>
+  <div id="info1"> Press [ESC] to access you cursor</div>-->
+  <div id="startScreen1">
+    <button onclick="startGame()" id="startbtn">START GAME</button>
+    <button onclick="objective()" id="objbtn">GAME OBJECTIVE</button>
+    <button type="button"    onclick="window.open('', '_self', ''); window.close();" id="exitbtn">EXIT</button>
+  </div>
+  <div id="objectiveContainer">
+    <div id="gameObjective">
+      <h4>GAME OBJECTIVE</h4>
+      <div>The world is under attack, zombies have taken over, the world is sick, the human race is ending. 
+         This virus developed in the labs by the government is spreading very rapidly and if 
+         nothing is done to stop the spreading, humans will be extinct in about, a month? or 2 weeks?
+         or even less. 
+
+         Hey soldier, welcome to Shooter. The game objective is pretty much simple, kill the zombies 
+         before they attack you. Yes, that simple. This will reduce the spread of this virus, you get attacked, 
+         if you're lucky the virus will turn you into a zombie, otherwise you'll die ( both options are not nice are they? ).
+         Here is how it goes, the zombies will come your way, whether you decide
+         to run, hide or I don't know what, they will find you and they will kill you. 
+         The more you run, the more zombies there'll be and trust me you don't wanna deal 
+         with hundreds and hundres of zombies, so kill the specified number of zombies as you can as quickly as you possibly can
+         under the specified time period. As time goes more zombies will show up. So do it quickly and save the human race.</div>
+      </div>
+      <div class="row" id="startGame">
+        <button onclick="Ok()">
+          <img src="icons8-macos-close-24.png"/>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!--
+  <div id="game" class="hidden">
+  <object name="foo" type="text/html" data="game.html"></object>
+  </div>-->
+  <script>
+
+document.getElementById("objectiveContainer").style.display = "none";
+
+
+objective = function(){
+
+  document.getElementById("objectiveContainer").style.display = "block";
+  document.getElementById("startbtn").style.display = "none";
+  document.getElementById("objbtn").style.display = "none";
+  document.getElementById("exitbtn").style.display = "none";
+
+
+}  
+Ok = function(){
+  document.getElementById("objectiveContainer").style.display = "none";
+  document.getElementById("startbtn").style.display = "block";
+  document.getElementById("objbtn").style.display = "block";
+  document.getElementById("exitbtn").style.display = "block";
+}
+startGame = function(){
+
+    document.getElementById("startScreen1").classList.add("hidden");
+    location.href="game.html"
+    //document.getElementById("game").classList.remove("hidden");
+    //init();
+    //requestAnimationFrame(animate);
+    started =true;
+}
+
+  
+  </script>
 </body>
 </html>
