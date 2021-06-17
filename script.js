@@ -1,16 +1,13 @@
 
+var speed = 2; //units a second
+var zdelta = 0;
+var localThis = this;
+var mixers = [];
+var scope=this;
+var refObject = this.referenceModel;
 
-
-var scene,camera,renderer,mesh,controls, clock,portalParticles=[],smokeParticles=[];
-
+var scene,camera,renderer,mesh,controls,clock,portalParticles=[],smokeParticles=[];
 var meshFloor;
-var started=true;
-var paused = false;
-var info = true;
-
-bullets = [];
-
-
 if ("pointerLockElement" in document || "mozPointerLockElement" in document || "webkitPointerLockElement" in document) {
 	let element = document.body;
 	//Setup pointer locking mechanisms
@@ -22,7 +19,7 @@ if ("pointerLockElement" in document || "mozPointerLockElement" in document || "
 		}
 	};
 	let pointerlockerror = e => {
-	//alert("Pointer lock error!");
+		alert("Pointer lock error!");
 	};
 
 
@@ -36,10 +33,8 @@ if ("pointerLockElement" in document || "mozPointerLockElement" in document || "
 	document.addEventListener("webkitpointerlockerror", pointerlockerror, false);
 	document.addEventListener("click", e => {
 		//Ask the browser to lock the pointer
-        if(!paused && started){
-            element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
-            element.requestPointerLock();
-        }
+		element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+		element.requestPointerLock();
 	}, false);
 } else {
 	alert("Pointer lock error!");
@@ -54,6 +49,8 @@ player = {
 };
 
 
+bullets = [];
+var _mixers = [];
 class Bullet {
     constructor (x, y, z, dir) {
         this.dir = dir;
@@ -111,6 +108,15 @@ models = {
 		castShadow: true,
 		receiveShadow: false
     },
+
+    box: {
+      obj: "models/box.obj",
+      mtl: "models/box.mtl",
+      mesh: null,
+  castShadow: true,
+  receiveShadow: false
+  },
+
     lightPost: {
         obj: "models/lightpost.obj",
         mtl: "models/lightpost.mtl",
@@ -148,12 +154,8 @@ const sound = new THREE.Audio( listener );
   source.connect(listener.context.destination);
   source.start();
 }
-//window.addEventListener('touchstart', playSound);
-document.addEventListener('click', function (e) {
-    if(started){
-        playSound();
-    }
-});
+window.addEventListener('touchstart', playSound);
+document.addEventListener('click', playSound);
 
 init = function () {
     scene = new THREE.Scene();
@@ -165,15 +167,17 @@ init = function () {
     ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
 
+
+
     pointLight = new THREE.PointLight(0xffffff, 0.5, 50);
     pointLight.position.set(8, 12, 8);
     pointLight.castShadow = true;
     pointLight.shadow.camera.near = 0.1;
     pointLight.shadow.camera.far = 25;
     scene.add(pointLight);//Point light to cast shadows
-
-    document.getElementById("info14").style.display = "none";
-
+     
+    
+  
 
     //Load in all models
     for (let _key in models) {
@@ -241,9 +245,25 @@ init = function () {
 		portalLight.position.set(0,5200,0);
 		scene.add(portalLight);
     particleSetup();
-    _LoadAnimatedModel();
+    particleSetup1();
+
+    LoadAnimatedModel();
+
+    loadModel('girl.fbx')
+    loadModel('Thriller Idle.fbx')
+    loadModel1('Zombie biting.fbx')
+    loadModel1('dancer.fbx')
+    loadModel2('Walking.fbx')
+    loadModel2('Zombie Run.fbx')
+    //loadModel6('girl.fbx')
+    //loadModel5('Walking.fbx')
+    //loadModel5('Zombie Run.fbx')
+    loadModel4('Walking.fbx')
+    loadModel4('Zombie biting.fbx')
+   
+
     controls = new THREE.PointerLockControls(camera);
-	scene.add(controls.getObject());
+	  scene.add(controls.getObject());
     controls.getObject().position.set(0, player.height, -4.5);
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
     controls.getObject().rotation.y = Math.PI;
@@ -260,12 +280,12 @@ init = function () {
 
 
 ///Load Environment
-loadEnvironment=function(LoadingManager){
+function loadEnvironment(LoadingManager){
 	const game = this;
 loader=new THREE.FBXLoader();
-	loader.load( "/environment.fbx", function ( object ) {
+	loader.load( "environment.fbx", function ( object ) {
 		game.scene.add(object);
-    object.scale.set(0.01,0.01,0.01);
+    object.scale.set(0.04,0.04,0.04);
 		object.receiveShadow = true;
 		object.name = "Environment";
 
@@ -298,14 +318,18 @@ onResourcesLoaded = function () {
 	meshes["gun"].scale.set(3, 3, 3);
 	scene.add(meshes["gun"]);
 
-    meshes["lightPost"] = models.lightPost.mesh.clone();
-    scene.add(meshes["lightPost"]);
-    lightPost = new THREE.PointLight(0xffffff, 0.3, 5);
-    lightPost.position.set(0, 3, 0);
-    lightPost.castShadow = true;
-    lightPost.shadow.camera.near = 0.1;
-    lightPost.shadow.camera.far = 25;
-    scene.add(lightPost);
+ 
+
+    meshes["lightPost1"] = models.lightPost.mesh.clone();
+    scene.add(meshes["lightPost1"]);
+    lightPost1 = new THREE.PointLight(0xffffff, 0.3, 5);
+    lightPost1.position.set(2.5, 11.5, 0);
+    lightPost1.castShadow = true;
+    lightPost1.shadow.camera.near = 0.1;
+    lightPost1.shadow.camera.far = 25;
+    scene.add(lightPost1);
+
+  
 
     meshes["bigRock1"] = models.bigRock.mesh.clone();
     meshes["bigRock1"].position.set(2, 0, -3);
@@ -314,6 +338,13 @@ onResourcesLoaded = function () {
     meshes["bigRock2"].position.set(-2, 0, 3);
     meshes["bigRock2"].rotation.y += Math.PI;
     scene.add(meshes["bigRock2"]);
+
+    meshes["box"] = models.box.mesh.clone();
+    meshes["box"].position.set(-2.5, 0, 3);
+    meshes["box"].rotation.y += Math.PI;
+    scene.add(meshes["box"]);
+
+
     loadEnvironment();
 
 	}
@@ -367,36 +398,202 @@ onResourcesLoaded = function () {
 	            });
 	        }
 
-          _LoadAnimatedModel=function() {
+          function particleSetup1() {
+            let loader = new THREE.TextureLoader();
+            loader.load("./R85933b56dcfe6f192d88d23c0d9fa711.jpg", function (texture){
+                portalGeo = new THREE.PlaneBufferGeometry(35,35);
+
+                portalMaterial = new THREE.MeshStandardMaterial({
+                    map:texture,
+                    transparent: true
+                });
+                smokeGeo = new THREE.PlaneBufferGeometry(10,10);
+
+                smokeMaterial = new THREE.MeshStandardMaterial({
+                    map:texture,
+                    transparent: true
+                });
+                for(let p=880;p>250;p--) {
+                    let particle = new THREE.Mesh(portalGeo,portalMaterial);
+                    particle.position.set(
+                        0.5 * p * Math.cos((4 * p * Math.PI) / 180),
+                        0.5 * p * Math.sin((4 * p * Math.PI) / 180),
+                        0.1 * p
+                    );
+                    particle.rotation.z = Math.random() *360;
+                    portalParticles.push(particle);
+
+                    scene.add(particle);
+                      particle.rotation.x+=Math.PI/2;
+                    particle.position.set(0,50,0);
+                }
+                for(let p=0;p<40;p++) {
+                    let particle = new THREE.Mesh(smokeGeo,smokeMaterial);
+                    particle.position.set(
+                        Math.random() * 1000-500,
+                        Math.random() * 400-200,
+                        25
+                    );
+                    particle.rotation.z = Math.random() *360;
+                    particle.material.opacity = 0.6;
+                    portalParticles.push(particle);
+                    scene.add(particle);
+                    particle.position.set(0,10,10);
+                }
+                clock = new THREE.Clock();
+                animate();
+
+            });
+        }
+
+        function  LoadAnimatedModel() {
               const loader = new THREE.FBXLoader();
 
-              loader.load('mremireh_o_desbiens.fbx', (fbx) => {
+              loader.load("mremireh_o_desbiens.fbx", (fbx) => {
                 fbx.scale.setScalar(0.1);
                 fbx.traverse(c => {
                   c.castShadow = true;
                 });
 
-                const params = {
-                  target: fbx,
-                  camera: this._camera,
-                }
 
                 const anim = new FBXLoader();
 
-                anim.load('./models/punch.fbx', (anim) => {
-                  const m = new THREE.AnimationMixer(fbx);
-                  this._mixers.push(m);
-                  const idle = m.clipAction(anim.animations[0]);
+                anim.load("punch.fbx", (anim) => {
+                  const mixers = new THREE.AnimationMixer(fbx);
+                  this._mixers.push(mixers);
+                  const idle = mixers.clipAction((anim).animations[0]);
                   idle.play();
                 });
-                this._scene.add(fbx);
-                fbx.position.set(0,0,0);
+                this._scene.add(anim);
+                //fbx.position.set(0,0,0);
               });
             }
 
 
+            function loadModel(file) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005); 
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+
+                  //object.setDuration(7);
+                  //object.setLoop(0, 0);
+                  //object.clampWhenFinished = true;
+                  scene.add(object);
+                  object.position.x = 2.5;
+                  object.position.z = 2;
+                  object.rotation.set( 0.0, 3.5, 0.0 );
+                 // object.position.z += speed * delta;
+                  object.updateMatrix();
+                });
+
+              }
+
+              function loadModel1(file1) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file1, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005); 
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+                  scene.add(object);        
+                  object.position.x = 3.8;
+                  object.position.z = 1.5;
+                  object.rotation.set( 0.0, 3.5, 0.0 );  
+                  //object.position.z += speed * delta;
+                  object.updateMatrix();
+                });
+
+              }
+
+              function loadModel2(file2) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file2, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005); 
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+                  scene.add(object);        
+                  object.position.x = 3.5;
+                  object.position.z = 1.7;
+                  object.rotation.set( 0.0, 3.5, 0.0 );  
+                  //object.position.z += speed * delta;
+                  object.updateMatrix();
+                });
+
+              }
+
+              function loadModel5(file5) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005); 
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+                  scene.add(object);        
+                  object.position.x = 1.8;
+                  object.rotation.set( 0.0, 3.5, 0.0 );  
+                  //object.position.z += speed * delta;
+                  object.updateMatrix();
+                });
+
+              }
+
+              function loadModel4(file4) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file4, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005); 
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+                  scene.add(object);        
+                  object.position.x = 2.8;
+                  object.rotation.set( 0.0, 3.5, 0.0 );  
+                  //object.position.z += speed * delta;
+                  object.updateMatrix();
+                });
+
+              }
+
 animate = function () {
-    if (resourcesLoaded == false && !paused) {
+    if (resourcesLoaded == false) {
         requestAnimationFrame(animate);
         return;
     }
@@ -410,17 +607,29 @@ animate = function () {
 	            if(Math.random() > 0.9) {
 	                portalLight.power =350 + Math.random()*500;
 	            }
+    requestAnimationFrame(animate);
 
-                if(!paused){
-                    requestAnimationFrame(animate);
-                }
+    if (mixers.length > 0) {
+        zdelta = clock.getDelta();
+        for (var i = 0; i < mixers.length; i++) {
+    
+          mixers[i].update(delta);
+          //object.position.z += speed * delta;
+         }
+    
+      }
+    
+    
 
     for (let bullet of bullets) {
         bullet.update();
     }
+
     if (keyboard[87]) { //W key
         controls.getObject().position.x -= Math.sin(controls.getObject().rotation.y) * player.speed;
         controls.getObject().position.z -= Math.cos(controls.getObject().rotation.y) * player.speed;
+  
+
     }
     if (keyboard[83]) { //S key
         controls.getObject().position.x += Math.sin(controls.getObject().rotation.y) * player.speed / 2;
@@ -435,9 +644,10 @@ animate = function () {
         controls.getObject().position.z += Math.cos(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
     }
 
-    if(keyboard[67]){//C key
 
-    }
+
+		//this.renderer.render( this.scene, this.camera );
+
 
 
 	//Position gun in front of player
@@ -460,91 +670,22 @@ animate = function () {
         player.speed = 0.025;
     }
     renderer.render(scene, camera);
-
-
 };
 
-
-
+function render() {
+    rightArm.rotation.y = movementData[timeCounter][0];
+    timeCounter += 1;
+}
 
 window.addEventListener("keydown", function (e) {
-    console.log("keyboardown"+e.keyCode);
     keyboard[event.keyCode] = true;
-    /*if (e.keyCode==87) { //W key
-        controls.getObject().position.x -= Math.sin(controls.getObject().rotation.y) * player.speed;
-        controls.getObject().position.z -= Math.cos(controls.getObject().rotation.y) * player.speed;
-    }
-    if (e.keyCode==83) { //S key
-        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y) * player.speed / 2;
-        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y) * player.speed / 2;
-    }
-    if (keyboard[65]) { //A key
-        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y - Math.PI / 2) * player.speed / 2;
-        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y - Math.PI / 2) * player.speed / 2;
-    }
-    if (keyboard[68]) { //D key
-        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
-        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
-    }*/
 });
 
 window.addEventListener("keyup", function (e) {
-
-    console.log("keyboarda"+e.keyCode);
-    //EventListener for the [P] key which pauses or resumes the game depending on its state.
-    if(e.keyCode==80){
-        console.log("keyboarda"+e.keyCode);
-        if(paused && started){
-            //animate=true;
-            document.getElementById("pauseMenu").style.display = "none";
-            document.getElementById("pause").classList.remove("hidden");
-            document.getElementById("info14").style.display = "block";
-            document.getElementById("pause").style.cursor = "default";
-            console.log("keyboard[76]"+keyboard[80]);
-            console.log("keyboard[9009]"+keyboard[80]);
-            //document.getElementById("pauseMenu").style.display = "none";
-            paused = false;
-            requestAnimationFrame(animate);
-            //animate();
-            //init();
-        }else if(!paused && started){
-
-            document.getElementById("pauseMenu").style.display = "block";
-            document.getElementById("close").style.display = "none";
-            document.getElementById("info1").style.display = "none";
-            document.getElementById("info14").style.display = "none";
-            document.getElementById("pause").classList.add("hidden");
-
-            paused = true;
-        }
-    }
-
-    //EventListener when the [C] key is pressed which closes and opens the game info depending on its state.
-    if(e.keyCode==67){
-        console.log("keyboarda"+e.keyCode);
-        if(info && started){
-
-             document.getElementById("info14").style.display = "block";
-             document.getElementById("info1").style.display = "none";
-             document.getElementById("close").style.display = "none";
-
-            info = false;
-
-        }else if(!info && started){
-
-            document.getElementById("info14").style.display = "none";
-            document.getElementById("info1").style.display = "block";
-            document.getElementById("close").style.display = "block";
-
-            info = true;
-        }
-    }
     keyboard[event.keyCode] = false;
 });
 
-
 window.addEventListener("click", function (e) {
-    if(!paused && started){
     if (player.coolDown == 0) {
         bullets.push(new Bullet(
             controls.getObject().position.x,
@@ -554,136 +695,12 @@ window.addEventListener("click", function (e) {
         ));
         player.coolDown = 10;
     }
-}
 });
+
 window.addEventListener("resize", function (e) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
 });
 
-//Pausing the game anytime during play.
-pauseGame = function(){
-
-    document.getElementById("pauseMenu").style.display = "block";
-    document.getElementById("close").style.display = "none";
-    document.getElementById("info1").style.display = "none";
-    document.getElementById("info14").style.display = "none";
-    document.getElementById("pause").classList.add("hidden");
-    paused = true;
-}
-
-//Resuming the game after pausing it
-resumeGame = function(){
-
-    //animate=true;
-    document.getElementById("pauseMenu").style.display = "none";
-    document.getElementById("info14").style.display = "block";
-    document.getElementById("pause").classList.remove("hidden");
-    console.log("keyboard[76]"+keyboard[80]);
-    console.log("keyboard[76]"+keyboard[80]);
-    //document.getElementById("pauseMenu").style.display = "none";
-    paused = false;
-    requestAnimationFrame(animate);
-    //animate();
-    //init();
-}
-
-//restarting the game from any position during gameplay
-restartGame = function(){
-    window.location.reload();
-}
-
-//Starting the game from start menu
-startGame = function(){
-
-    document.getElementById("startScreen1").classList.add("hidden");
-    document.getElementById("pause").classList.remove("hidden");
-   // document.getElementById("info1").classList.remove("hidden");
-    //init();
-    //requestAnimationFrame(animate);
-    started =true;
-}
-
-//Quits the game and goes back to Start Menu
-quitGame = function(){
-
-
-    location.href="index.html"
-   /* console.log("clear Render")
-    paused = true;
-
-	scene.add(controls.getObject());
-    controls.getObject().position.set(0, player.height, -4.5);
-    controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
-    controls.getObject().rotation.y = Math.PI;
-
-
-    renderer.render(scene,camera)
-
-
-*/
-
-    //skybox.dispose()
-    //var obj = renderer.getSize();
-    /*while(scene.children.length > 0){
-        scene.remove(scene.children[0]);
-    }
-
-    scene.clear();*/
-
-    //init();
-    //requestAnimationFrame(animate);
-
-
-    /*
-    var to_remove = [];
-
-    scene.traverse ( function( child ) {
-        if ( child instanceof THREE.Mesh && !child.userData.keepMe === true ) {
-            to_remove.push( child );
-         }
-    } );
-
-    for ( var i = 0; i < to_remove.length; i++ ) {
-        scene.remove( to_remove[i] );
-    }
-    */
-
-
-}
-//function for quit confirmation
-confirmQuit = function(){
-    document.getElementById("quitMenu").style.display = "block";
-    document.getElementById("pauseMenu").style.display = "none";
-
-}
-
-//Function called when user decides not to quit the game...
-cancelQuit = function(){
-    document.getElementById("quitMenu").style.display = "none";
-    document.getElementById("pauseMenu").style.display = "block";
-}
-
-//Closing the information overlay
-closeInfo = function(){
-
-    document.getElementById("close").style.display = "none";
-    document.getElementById("info1").style.display = "none";
-    document.getElementById("info14").style.display = "block";
-
-}
-//Opening information overlay
-gameInfo = function(){
-    document.getElementById("info14").style.display = "none";
-    document.getElementById("info1").style.display = "block";
-    document.getElementById("close").style.display = "block";
-}
-/*var gameObj = "Hey gamer, welcome to Shooter. The game objective is" +
- "pretty simple, Kill the zombies before they kill you. Yes, that simple." +
-  "Here is how it goes, the zombies will come your way, whether you decide " +
-  "to run, hide or I don't know what, they will find you and they will kill you." +
-  "The more you run, the more zombies there'll be and trust me you don't wanna deal" +
-  "with hundreds and hundres of zombies, so kill as much as you can as quickly as you can" +
-  "under the specified time period";*/
 init();
