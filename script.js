@@ -2,7 +2,7 @@
 
 
 var scene,camera,renderer,mesh,controls, clock,portalParticles=[],smokeParticles=[];
-
+var mapCamera, mapWidth = 240, mapHeight = 160;
 var meshFloor;
 var started=true;
 var paused = false;
@@ -158,6 +158,22 @@ document.addEventListener('click', function (e) {
 init = function () {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(0,200,550);
+	camera.lookAt(scene.position);
+	scene.add(camera);
+    mapCamera = new THREE.OrthographicCamera( window.innerWidth / -2,		// Left
+        window.innerWidth / 2,		// Right
+        window.innerHeight / 2,		// Top
+        window.innerHeight / -2,	// Bottom
+        -5000,            			// Near 
+        10000 );           			// Far 
+        mapCamera.up = new THREE.Vector3(0,0,-1);
+        mapCamera.lookAt( new THREE.Vector3(0,-1,0) );
+        scene.add(mapCamera);
+
+    
+    THREEx.FullScreen.bindKey({charCode: 'm'.charCodeAt(0)});
+
     loadingManager = new THREE.LoadingManager();//loading manager to handle items loading
     console.log("Loading content ...")
     loadingManager.onLoad = onResourcesLoaded;
@@ -255,6 +271,9 @@ init = function () {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.BasicShadowMap;
     document.body.appendChild(renderer.domElement);
+
+    THREEx.WindowResize(renderer, mapCamera);
+    
     animate();
 };
 
@@ -265,7 +284,7 @@ loadEnvironment=function(LoadingManager){
 loader=new THREE.FBXLoader();
 	loader.load( "/environment.fbx", function ( object ) {
 		game.scene.add(object);
-    object.scale.set(0.01,0.01,0.01);
+    object.scale.set(0.04,0.04,0.04);
 		object.receiveShadow = true;
 		object.name = "Environment";
 
@@ -361,7 +380,7 @@ onResourcesLoaded = function () {
 	                    scene.add(particle);
 											particle.position.set(0,90,0);
 	                }
-	                clock = new THREE.Clock();
+	               
 	                animate();
 
 	            });
@@ -400,6 +419,8 @@ animate = function () {
         requestAnimationFrame(animate);
         return;
     }
+    clock = new THREE.Clock();
+     render();
 		let delta = clock.getDelta();
 	            portalParticles.forEach(p => {
 	                p.rotation.z -= delta *1.5;
@@ -434,9 +455,9 @@ animate = function () {
         controls.getObject().position.x += Math.sin(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
         controls.getObject().position.z += Math.cos(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
     }
-
+  
     if(keyboard[67]){//C key
-
+        
     }
 
 
@@ -460,7 +481,7 @@ animate = function () {
         player.speed = 0.025;
     }
     renderer.render(scene, camera);
-
+    
 
 };
 
@@ -489,32 +510,32 @@ window.addEventListener("keydown", function (e) {
 });
 
 window.addEventListener("keyup", function (e) {
-
+     
     console.log("keyboarda"+e.keyCode);
     //EventListener for the [P] key which pauses or resumes the game depending on its state.
     if(e.keyCode==80){
         console.log("keyboarda"+e.keyCode);
-        if(paused && started){
+        if(paused && started){        
             //animate=true;
-            document.getElementById("pauseMenu").style.display = "none";
+            document.getElementById("pauseMenu").style.display = "none";   
             document.getElementById("pause").classList.remove("hidden");
             document.getElementById("info14").style.display = "block";
-            document.getElementById("pause").style.cursor = "default";
+            document.getElementById("pause").style.cursor = "default";   
             console.log("keyboard[76]"+keyboard[80]);
             console.log("keyboard[9009]"+keyboard[80]);
             //document.getElementById("pauseMenu").style.display = "none";
             paused = false;
             requestAnimationFrame(animate);
             //animate();
-            //init();
+            //init();   
         }else if(!paused && started){
-
+                    
             document.getElementById("pauseMenu").style.display = "block";
             document.getElementById("close").style.display = "none";
             document.getElementById("info1").style.display = "none";
             document.getElementById("info14").style.display = "none";
             document.getElementById("pause").classList.add("hidden");
-
+            
             paused = true;
         }
     }
@@ -522,20 +543,20 @@ window.addEventListener("keyup", function (e) {
     //EventListener when the [C] key is pressed which closes and opens the game info depending on its state.
     if(e.keyCode==67){
         console.log("keyboarda"+e.keyCode);
-        if(info && started){
-
+        if(info && started){        
+            
              document.getElementById("info14").style.display = "block";
              document.getElementById("info1").style.display = "none";
              document.getElementById("close").style.display = "none";
-
+        
             info = false;
-
+            
         }else if(!info && started){
-
+                    
             document.getElementById("info14").style.display = "none";
             document.getElementById("info1").style.display = "block";
             document.getElementById("close").style.display = "block";
-
+            
             info = true;
         }
     }
@@ -564,7 +585,7 @@ window.addEventListener("resize", function (e) {
 
 //Pausing the game anytime during play.
 pauseGame = function(){
-
+    
     document.getElementById("pauseMenu").style.display = "block";
     document.getElementById("close").style.display = "none";
     document.getElementById("info1").style.display = "none";
@@ -577,8 +598,8 @@ pauseGame = function(){
 resumeGame = function(){
 
     //animate=true;
-    document.getElementById("pauseMenu").style.display = "none";
-    document.getElementById("info14").style.display = "block";
+    document.getElementById("pauseMenu").style.display = "none"; 
+    document.getElementById("info14").style.display = "block";  
     document.getElementById("pause").classList.remove("hidden");
     console.log("keyboard[76]"+keyboard[80]);
     console.log("keyboard[76]"+keyboard[80]);
@@ -586,7 +607,7 @@ resumeGame = function(){
     paused = false;
     requestAnimationFrame(animate);
     //animate();
-    //init();
+    //init();   
 }
 
 //restarting the game from any position during gameplay
@@ -608,11 +629,11 @@ startGame = function(){
 //Quits the game and goes back to Start Menu
 quitGame = function(){
 
-
+    
     location.href="index.html"
    /* console.log("clear Render")
     paused = true;
-
+    
 	scene.add(controls.getObject());
     controls.getObject().position.set(0, player.height, -4.5);
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
@@ -626,12 +647,12 @@ quitGame = function(){
 
     //skybox.dispose()
     //var obj = renderer.getSize();
-    /*while(scene.children.length > 0){
-        scene.remove(scene.children[0]);
+    /*while(scene.children.length > 0){ 
+        scene.remove(scene.children[0]); 
     }
 
     scene.clear();*/
-
+    
     //init();
     //requestAnimationFrame(animate);
 
@@ -659,6 +680,26 @@ confirmQuit = function(){
 
 }
 
+function render() 
+{
+	var w = window.innerWidth, h = window.innerHeight;
+
+	// setViewport parameters:
+	//  lower_left_x, lower_left_y, viewport_width, viewport_height
+	renderer.setViewport( 0, 0, w, h );
+	renderer.clear();
+	
+	// full display
+	// renderer.setViewport( 0, 0, SCREEN_WIDTH - 2, 0.5 * SCREEN_HEIGHT - 2 );
+	renderer.render( scene, camera );
+	
+	// minimap (overhead orthogonal camera)
+	//  lower_left_x, lower_left_y, viewport_width, viewport_height
+	renderer.setViewport( 10, h - mapHeight - 10, mapWidth, mapHeight );
+	renderer.render( scene, mapCamera );
+}
+
+
 //Function called when user decides not to quit the game...
 cancelQuit = function(){
     document.getElementById("quitMenu").style.display = "none";
@@ -679,11 +720,12 @@ gameInfo = function(){
     document.getElementById("info1").style.display = "block";
     document.getElementById("close").style.display = "block";
 }
-/*var gameObj = "Hey gamer, welcome to Shooter. The game objective is" +
+/*var gameObj = "Hey gamer, welcome to Shooter. The game objective is" + 
  "pretty simple, Kill the zombies before they kill you. Yes, that simple." +
-  "Here is how it goes, the zombies will come your way, whether you decide " +
-  "to run, hide or I don't know what, they will find you and they will kill you." +
-  "The more you run, the more zombies there'll be and trust me you don't wanna deal" +
+  "Here is how it goes, the zombies will come your way, whether you decide " + 
+  "to run, hide or I don't know what, they will find you and they will kill you." + 
+  "The more you run, the more zombies there'll be and trust me you don't wanna deal" + 
   "with hundreds and hundres of zombies, so kill as much as you can as quickly as you can" +
   "under the specified time period";*/
 init();
+
