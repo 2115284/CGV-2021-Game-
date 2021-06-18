@@ -446,9 +446,10 @@ animate = function () {
 skybox.rotation.y += 0.001;
 
 	//Position gun in front of player
+
 	meshes["gun"].position.set(
 		controls.getObject().position.x - Math.sin(controls.getObject().rotation.y - Math.PI / 4) * 0.3,
-		controls.getObject().position.y - 0.1,
+		controls.getObject().position.y - 0.1+Math.sin(delta)*0.08,
 		controls.getObject().position.z - Math.cos(controls.getObject().rotation.y - Math.PI / 4) * 0.3
 	);
 	meshes["gun"].rotation.y = controls.getObject().rotation.y + Math.PI;
