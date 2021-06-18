@@ -1,4 +1,3 @@
-//initialize global variables
 var zdelta = 0;
 var localThis = this;
 var mixers = [];
@@ -179,7 +178,7 @@ init = function () {
     loadingManager = new THREE.LoadingManager();//loading manager to handle items loading
 
     console.log("Loading content ...")
-		//Setting up miniMap
+		//Setting up miniMap
     loadingManager.onLoad = onResourcesLoaded;
     cameraOrtho = new THREE.OrthographicCamera( - 0.5, 0.5 , 0.5, -0.5,  0.01, 10 );
     camera.add( cameraOrtho );
@@ -271,7 +270,7 @@ init = function () {
 		scene.add(portalLight);
     particleSetup();
     _LoadAnimatedModel();
-  /*  loadModel('fbx_models/girl.fbx')
+  loadModel('fbx_models/girl.fbx')
     loadModel('fbx_models/Thriller Idle.fbx')
     loadModel1('fbx_models/Zombie biting.fbx')
     loadModel1('fbx_models/dancer.fbx')
@@ -282,7 +281,7 @@ init = function () {
     loadModel2('fbx_models/Zombie Run.fbx')
     loadModel4('fbx_models/Walking.fbx')
     loadModel4('fbx_models/Zombie biting.fbx')
-*/
+
 
 
 
@@ -318,14 +317,12 @@ init = function () {
 
   /*  let loader = new THREE.TextureLoader();
     loader.load("smoke-png-13194.png",function(texture){
-
       cloudGeo = new THREE.PlaneBufferGeometry(10000,10000);
       cloudMaterial = new THREE.MeshLambertMaterial({
         map:texture,
         transparent: true
       });
       //Randomly adding cloud to the scene
-
       for(let p=0;p<25;p++){
         let cloud = new THREE.Mesh(cloudGeo,cloudMaterial);
         cloud.position.set(
@@ -340,7 +337,6 @@ init = function () {
         cloudParticles.push(cloud);
         scene.add(cloud);
       }
-
     });*/
 
 
@@ -886,16 +882,11 @@ quitGame = function(){
     location.href="index.html"
    /* console.log("clear Render")
     paused = true;
-
 	scene.add(controls.getObject());
     controls.getObject().position.set(0, player.height, -4.5);
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
     controls.getObject().rotation.y = Math.PI;
-
-
     renderer.render(scene,camera)
-
-
 */
 
     //skybox.dispose()
@@ -903,7 +894,6 @@ quitGame = function(){
     /*while(scene.children.length > 0){
         scene.remove(scene.children[0]);
     }
-
     scene.clear();*/
 
     //init();
@@ -912,13 +902,11 @@ quitGame = function(){
 
     /*
     var to_remove = [];
-
     scene.traverse ( function( child ) {
         if ( child instanceof THREE.Mesh && !child.userData.keepMe === true ) {
             to_remove.push( child );
          }
     } );
-
     for ( var i = 0; i < to_remove.length; i++ ) {
         scene.remove( to_remove[i] );
     }
