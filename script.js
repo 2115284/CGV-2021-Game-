@@ -1,7 +1,6 @@
 
-
-let cameraOrtho,insetWidth, insetHeight;
-
+//Global Variable initialization
+var cameraOrtho,insetWidth, insetHeight,sphereCamera;
 var scene,camera,renderer,mesh,controls, clock,portalParticles=[],smokeParticles=[];
 var mapCamera, mapWidth = 256, mapHeight = 256, mapComposer;
 var meshFloor;
@@ -11,7 +10,7 @@ var info = true;
 
 bullets = [];
 
-
+//PointerLock controls
 if ("pointerLockElement" in document || "mozPointerLockElement" in document || "webkitPointerLockElement" in document) {
 	let element = document.body;
 	//Setup pointer locking mechanisms
@@ -47,6 +46,7 @@ if ("pointerLockElement" in document || "mozPointerLockElement" in document || "
 }
  var startBtn = document.getElementById('startBtn');
 keyboard = {};
+//Array representing the player and player characteristics
 player = {
     height: 0.8,
     speed: 0.025,
@@ -54,7 +54,7 @@ player = {
     coolDown: 0
 };
 
-
+//Bullet class for the gun bullets
 class Bullet {
     constructor (x, y, z, dir) {
         this.dir = dir;
@@ -83,6 +83,7 @@ class Bullet {
     }
 }
 resourcesLoaded = false;
+//Array containing models and Meshes in our scene
 models = {
     pineTree: {
         obj: "models/treePine.obj",
@@ -166,10 +167,11 @@ init = function () {
     cameraOrtho = new THREE.OrthographicCamera( - 0.5, 0.5 , 0.5, -0.5,  0.01, 10 );
     camera.add( cameraOrtho );
 
+   //Adding a bit of fog for depth
     scene.fog=new THREE.FogExp2(0x03544e,0.001);
     ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
-
+ //Adding a pointLight to the scene
     pointLight = new THREE.PointLight(0xffffff, 0.5, 50);
     pointLight.position.set(8, 12, 8);
     pointLight.castShadow = true;
@@ -200,7 +202,7 @@ init = function () {
             });
         })(_key);
     }
-
+//Initializing the skybox using CubeGeometry/CubeMap
     skybox = new THREE.Mesh(
         new THREE.CubeGeometry(1000, 1000, 1000),
         new THREE.MeshFaceMaterial([
@@ -233,6 +235,7 @@ init = function () {
 
     scene.add(skybox);
 
+//Create floor using PlaneGeometry
     floor = new THREE.Mesh(
         new THREE.PlaneGeometry(1000, 1000, 10, 10),
         new THREE.MeshPhongMaterial({color:0xff0000})
@@ -241,7 +244,7 @@ init = function () {
     floor.receiveShadow = true;
     scene.add(floor);
 
-
+///Create PortalLight that/ll shine light down
 		portalLight = new THREE.PointLight(0x062d89, 30, 6000, 1.7);
 		portalLight.position.set(0,5200,0);
 		scene.add(portalLight);
@@ -252,8 +255,16 @@ init = function () {
     controls.getObject().position.set(0, player.height, -4.5);
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
     controls.getObject().rotation.y = Math.PI;
-
-
+    //Create a reflective sphere
+   let sphereMaterial = new THREE.MeshBasicMaterial();
+   let sphereGeo =  new THREE.SphereGeometry(400, 50, 50);
+   let mirrorSphere = new THREE.Mesh(sphereGeo, sphereMaterial);
+   mirrorSphere.position.set(0, 5, 0);
+   scene.add(mirrorSphere);
+   sphereCamera = new THREE.CubeCamera(1, 1000, 500);
+   sphereCamera.position.set(0, 5, 0);
+   scene.add(sphereCamera);
+   sphereMaterial = new THREE.MeshBasicMaterial( {envMap: sphereCamera.renderTarget} );
     renderer = new THREE.WebGLRenderer({ antialiasing: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setClearColor(scene.fog.color);
@@ -291,7 +302,7 @@ loader=new THREE.FBXLoader();
 }
 
 
-//
+//As soon as resources load perform this
 
 onResourcesLoaded = function () {
     console.log("Content loaded!");
@@ -302,7 +313,7 @@ onResourcesLoaded = function () {
 	meshes["gun"] = models[player.weapon].mesh.clone();
 	meshes["gun"].scale.set(3, 3, 3);
 	scene.add(meshes["gun"]);
-
+//lightPost Mesh
     meshes["lightPost"] = models.lightPost.mesh.clone();
     scene.add(meshes["lightPost"]);
     lightPost = new THREE.PointLight(0xffffff, 0.3, 5);
@@ -311,7 +322,7 @@ onResourcesLoaded = function () {
     lightPost.shadow.camera.near = 0.1;
     lightPost.shadow.camera.far = 25;
     scene.add(lightPost);
-
+//Rock Mesh
     meshes["bigRock1"] = models.bigRock.mesh.clone();
     meshes["bigRock1"].position.set(2, 0, -3);
     scene.add(meshes["bigRock1"]);
@@ -323,7 +334,7 @@ onResourcesLoaded = function () {
 
 	}
 
-
+//Function that runs the Portal Particle Simulation
 	function particleSetup() {
 	            let loader = new THREE.TextureLoader();
 	            loader.load("./smoke-png-13194.png", function (texture){
@@ -443,7 +454,8 @@ animate = function () {
     if(keyboard[67]){//C key
 
     }
-skybox.rotation.y += 0.001;
+    //rotating the skybox
+   skybox.rotation.y += 0.001;
 
 	//Position gun in front of player
 
@@ -466,6 +478,7 @@ skybox.rotation.y += 0.001;
         player.speed = 0.025;
     }
 
+    //Rendering the ViewPort
 
     renderer.render(scene, camera);
     renderer.setClearColor( 0x000000 );
@@ -486,6 +499,7 @@ skybox.rotation.y += 0.001;
    	renderer.render( scene, cameraOrtho );
 
      renderer.setScissorTest( false );
+     sphereCamera.updateCubeMap( renderer, scene );
 
 };
 
