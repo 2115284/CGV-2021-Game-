@@ -1,16 +1,24 @@
-
-
+//initialize global variables
+var zdelta = 0;
+var localThis = this;
+var mixers = [];
+var scope=this;
+var refObject = this.referenceModel;
+let cloudParticles =[];
+let flesh , rain ,rainGeo =[] , rainCount =200000 ,sphereCamera;
+//variables for miniMap
+let cameraOrtho,insetWidth, insetHeight;
 
 var scene,camera,renderer,mesh,controls, clock,portalParticles=[],smokeParticles=[];
-
+var mapCamera, mapWidth = 256, mapHeight = 256, mapComposer;
 var meshFloor;
 var started=true;
 var paused = false;
 var info = true;
-
+//Array that stores bullest
 bullets = [];
 
-
+//Pointer Locker
 if ("pointerLockElement" in document || "mozPointerLockElement" in document || "webkitPointerLockElement" in document) {
 	let element = document.body;
 	//Setup pointer locking mechanisms
@@ -44,8 +52,11 @@ if ("pointerLockElement" in document || "mozPointerLockElement" in document || "
 } else {
 	alert("Pointer lock error!");
 }
+//Execute when user clicks start
  var startBtn = document.getElementById('startBtn');
 keyboard = {};
+
+//Player array to store player
 player = {
     height: 0.8,
     speed: 0.025,
@@ -53,8 +64,9 @@ player = {
     coolDown: 0
 };
 
-
+//Bullet class for gun Bullets
 class Bullet {
+	//Constructor taking in positions and direction
     constructor (x, y, z, dir) {
         this.dir = dir;
         this.mesh = models.bullet.mesh.clone();
@@ -68,6 +80,7 @@ class Bullet {
         this.mesh.rotation.y = dir;
         scene.add(this.mesh);
     }
+		//Updating position
     update () {
         this.mesh.position.set(
             this.mesh.position.x - Math.sin(this.dir) * 0.1,
@@ -81,7 +94,10 @@ class Bullet {
         }
     }
 }
+//Variable to track loaded resources
 resourcesLoaded = false;
+
+//Array that stores all our models that we'll be using
 models = {
     pineTree: {
         obj: "models/treePine.obj",
@@ -133,11 +149,13 @@ models = {
 		receiveShadow: false
     }
 };
+//Array to store Meshes
 meshes = {};
-
- playSound=function(){
+//function that initiates sound
+ playSoundGun=function(){
+	 //Audio LOader to load Audio
    const audioLoader = new THREE.AudioLoader();
-  audioLoader.load("factory.ogg", function(buffer) {
+  audioLoader.load("m4a1_s.mp3", function(buffer) {
     sound.setBuffer( buffer );
     sound.setVolume(0.5);
     sound.play();
@@ -150,8 +168,8 @@ const sound = new THREE.Audio( listener );
 }
 //window.addEventListener('touchstart', playSound);
 document.addEventListener('click', function (e) {
-    if(started){
-        playSound();
+    if(started){//If mouse keys are clicked then play sound
+        playSoundGun();
     }
 });
 
@@ -159,12 +177,17 @@ init = function () {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
     loadingManager = new THREE.LoadingManager();//loading manager to handle items loading
+
     console.log("Loading content ...")
+		//Setting up miniMap
     loadingManager.onLoad = onResourcesLoaded;
+    cameraOrtho = new THREE.OrthographicCamera( - 0.5, 0.5 , 0.5, -0.5,  0.01, 10 );
+    camera.add( cameraOrtho );
+
     scene.fog=new THREE.FogExp2(0x03544e,0.001);
     ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
-
+//Adding a PointLight to our Scene
     pointLight = new THREE.PointLight(0xffffff, 0.5, 50);
     pointLight.position.set(8, 12, 8);
     pointLight.castShadow = true;
@@ -173,11 +196,7 @@ init = function () {
     scene.add(pointLight);//Point light to cast shadows
 
     document.getElementById("info14").style.display = "none";
-    window.onload = function () {
-        var fiveMinutes = 60 * 5,
-            display = document.querySelector('#time');
-        startTimer(fiveMinutes, display);
-    };
+
 
     //Load in all models
     for (let _key in models) {
@@ -199,8 +218,9 @@ init = function () {
             });
         })(_key);
     }
-
+//Initialize our skybox that represents environment
     skybox = new THREE.Mesh(
+			//Using a CubeGeometry/CubeMap for SkyBox
         new THREE.CubeGeometry(1000, 1000, 1000),
         new THREE.MeshFaceMaterial([
             new THREE.MeshBasicMaterial({
@@ -230,29 +250,109 @@ init = function () {
         ])
     );
 
-    scene.add(skybox);
+    scene.add(skybox);//Adding skybox to our Scene
 
+
+
+
+//Adiing a floor of PlaneGeometry
     floor = new THREE.Mesh(
         new THREE.PlaneGeometry(1000, 1000, 10, 10),
         new THREE.MeshPhongMaterial({color:0xff0000})
     );
+		//Flipping it horizontally
     floor.rotation.x -= Math.PI / 2;
     floor.receiveShadow = true;
     scene.add(floor);
 
-
+//Adding a portalLight
 		portalLight = new THREE.PointLight(0x062d89, 30, 6000, 1.7);
 		portalLight.position.set(0,5200,0);
 		scene.add(portalLight);
     particleSetup();
     _LoadAnimatedModel();
+  /*  loadModel('fbx_models/girl.fbx')
+    loadModel('fbx_models/Thriller Idle.fbx')
+    loadModel1('fbx_models/Zombie biting.fbx')
+    loadModel1('fbx_models/dancer.fbx')
+    loadModel2('fbx_models/Walking.fbx')
+    loadModel2('fbx_models/Zombie Run.fbx')
+    loadModel1('fbx_models/girl.fbx')
+    loadModel4('fbx_models/Walking.fbx')
+    loadModel2('fbx_models/Zombie Run.fbx')
+    loadModel4('fbx_models/Walking.fbx')
+    loadModel4('fbx_models/Zombie biting.fbx')
+*/
+
+
+
+//Adding a flash for rain
+    flesh= new THREE.PointLight(0x062d89,30,500,1.7);
+    flesh.position.set(200,300,100);
+    scene.add(flesh);
+//Adding a portlight
+      portalLight = new THREE.PointLight(0x062d89, 30, 6000, 1.7);
+      portalLight.position.set(0,5200,0);
+      scene.add(portalLight);
+//Rain Geometry a vector3
+    rainGeo = new THREE.Geometry();
+    for(let i =0;i<rainCount;i++){
+			//Randomly assign raindrops
+      rainDrop = new THREE.Vector3(
+        Math.random()*400 - 200,
+        Math.random()*500 - 250,
+        Math.random()*400 - 200
+      );
+			//RainDrop Velocuty
+      rainDrop.velocity = {};
+      rainDrop.velocity = 0;
+    rainGeo.vertices.push(rainDrop);
+    }
+    rainMaterial = new THREE.PointsMaterial({
+      color:0xaaaaaa,
+      size:0.1,
+      transparent:true,
+    });
+    rain = new THREE.Points(rainGeo,rainMaterial);
+    scene.add(rain);
+
+  /*  let loader = new THREE.TextureLoader();
+    loader.load("smoke-png-13194.png",function(texture){
+
+      cloudGeo = new THREE.PlaneBufferGeometry(10000,10000);
+      cloudMaterial = new THREE.MeshLambertMaterial({
+        map:texture,
+        transparent: true
+      });
+      //Randomly adding cloud to the scene
+
+      for(let p=0;p<25;p++){
+        let cloud = new THREE.Mesh(cloudGeo,cloudMaterial);
+        cloud.position.set(
+          Math.random()*800 - 400,
+          500,
+          Math.random()*500-450,
+        );
+        cloud.rotation.x =1.16;
+        cloud.rotation.y=-0.12;
+        cloud.rotation.z=Math.random()*360;
+        cloud.material.opacity =0.6;
+        cloudParticles.push(cloud);
+        scene.add(cloud);
+      }
+
+    });*/
+
+
+
+//initializing PointerLock Controls
     controls = new THREE.PointerLockControls(camera);
-	scene.add(controls.getObject());
+  	scene.add(controls.getObject());
     controls.getObject().position.set(0, player.height, -4.5);
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
     controls.getObject().rotation.y = Math.PI;
 
-
+//Rendering scene
     renderer = new THREE.WebGLRenderer({ antialiasing: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setClearColor(scene.fog.color);
@@ -264,12 +364,12 @@ init = function () {
 
 
 ///Load Environment
-loadEnvironment=function(LoadingManager){
+function loadEnvironment(LoadingManager){
 	const game = this;
 loader=new THREE.FBXLoader();
-	loader.load( "/environment.fbx", function ( object ) {
+	loader.load( "environment.fbx", function ( object ) {
 		game.scene.add(object);
-    object.scale.set(0.04,0.04,0.04);
+    object.scale.set(0.01,0.01,0.01);
 		object.receiveShadow = true;
 		object.name = "Environment";
 
@@ -318,16 +418,13 @@ onResourcesLoaded = function () {
     meshes["bigRock2"].position.set(-2, 0, 3);
     meshes["bigRock2"].rotation.y += Math.PI;
     scene.add(meshes["bigRock2"]);
-
- 
-
     loadEnvironment();
 
 	}
 
-
+//Setting up particles for portal
 	function particleSetup() {
-	            let loader = new THREE.TextureLoader();
+	            let loader = new THREE.TextureLoader();//Texture Loader
 	            loader.load("./smoke-png-13194.png", function (texture){
 	                portalGeo = new THREE.PlaneBufferGeometry(35,35);
 
@@ -335,14 +432,14 @@ onResourcesLoaded = function () {
 	                    map:texture,
 	                    transparent: true
 	                });
-	                smokeGeo = new THREE.PlaneBufferGeometry(10,10);
+	                smokeGeo = new THREE.PlaneBufferGeometry(10,10);//Plane buffer for particles
 
 	                smokeMaterial = new THREE.MeshStandardMaterial({
 	                    map:texture,
 	                    transparent: true
 	                });
 	                for(let p=880;p>250;p--) {
-	                    let particle = new THREE.Mesh(portalGeo,portalMaterial);
+	                    let particle = new THREE.Mesh(portalGeo,portalMaterial);//Create Particle Mesh
 	                    particle.position.set(
 	                        0.5 * p * Math.cos((4 * p * Math.PI) / 180),
 	                        0.5 * p * Math.sin((4 * p * Math.PI) / 180),
@@ -353,7 +450,7 @@ onResourcesLoaded = function () {
 
 	                    scene.add(particle);
                         particle.rotation.x+=Math.PI/2;
-											particle.position.set(0,50,0);
+											particle.position.set(0,50,-50);
 	                }
 	                for(let p=0;p<40;p++) {
 	                    let particle = new THREE.Mesh(smokeGeo,smokeMaterial);
@@ -373,6 +470,110 @@ onResourcesLoaded = function () {
 
 	            });
 	        }
+
+
+            function loadModel(file) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005);
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+
+                 for(let p=0;p<20000;p++){
+                  object.position.set(-10,
+                  0,
+                  Math.random(),
+
+                  );
+                  object.rotation.x =0;
+          object.rotation.y= Math.random();
+          object.rotation.z=0;
+          scene.add(object);
+                 }
+
+                  object.updateMatrix();
+                });
+
+              }
+
+              function loadModel1(file1) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file1, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005);
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+                  scene.add(object);
+                  object.position.x = -8;
+                  object.position.z = 1.5;
+                  object.rotation.set( 0.0, 3.5, 0.0 );
+                  //object.position.z += speed * delta;
+                  object.updateMatrix();
+                });
+
+              }
+
+              function loadModel2(file2) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file2, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005);
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+                  scene.add(object);
+                  object.position.x = -9;
+                  object.position.z = 1.7;
+                  object.rotation.set( 0.0, 3.5, 0.0 );
+                  //object.position.z += speed * delta;
+                  object.updateMatrix();
+                });
+
+              }
+
+              function loadModel4(file4) {
+                var loader = new THREE.FBXLoader();
+                loader.load(file4, function (object) {
+                  object.mixer = new THREE.AnimationMixer(object);
+                  object.scale.multiplyScalar(0.005);
+                  mixers.push(object.mixer);
+                  var action = object.mixer.clipAction(object.animations[0]);
+                  action.play();
+                  object.traverse(function (child) {
+                    if (child.isMesh) {
+                      child.castShadow = true;
+                      child.receiveShadow = true;
+                    }
+                  });
+                  scene.add(object);
+                  object.position.x = -7.5;
+                  object.rotation.set( 0.0, 3.5, 0.0 );
+                  //object.position.z += speed * delta;
+                  object.updateMatrix();
+                });
+
+              }
 
           _LoadAnimatedModel=function() {
               const loader = new THREE.FBXLoader();
@@ -403,6 +604,37 @@ onResourcesLoaded = function () {
 
 
 animate = function () {
+
+
+    cloudParticles.forEach(p => {
+        p.rotation.z -=0.002;
+      });
+
+
+      if(Math.random() > 0.93 || flesh.power >100){
+        if(flesh.power <100)
+        flesh.position.set(
+          Math.random()*400,
+          300 + Math.random()*200,
+          100
+        );
+        flesh.power = 60 + Math.random()*500;
+      }
+
+
+
+     rainGeo.vertices.forEach(p =>{
+        p.velocity -= 0.1 + Math.random()*0.1;
+        p.y += p.velocity;
+        if(p.y<-200){
+          p.y =200;
+          p.velocity = 0;
+        }
+      } );
+      rainGeo.verticesNeedUpdate = true;
+
+
+
     if (resourcesLoaded == false && !paused) {
         requestAnimationFrame(animate);
         return;
@@ -421,6 +653,16 @@ animate = function () {
                 if(!paused){
                     requestAnimationFrame(animate);
                 }
+
+                if (mixers.length > 0) {
+                    zdelta = clock.getDelta();
+                    for (var i = 0; i < mixers.length; i++) {
+
+                      mixers[i].update(delta);
+                      //object.position.z += speed * delta;
+                     }
+
+                  }
 
     for (let bullet of bullets) {
         bullet.update();
@@ -441,16 +683,16 @@ animate = function () {
         controls.getObject().position.x += Math.sin(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
         controls.getObject().position.z += Math.cos(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
     }
-  
-    if(keyboard[67]){//C key
-        
-    }
 
+    if(keyboard[67]){//C key
+
+    }
+skybox.rotation.y += 0.001;
 
 	//Position gun in front of player
 	meshes["gun"].position.set(
 		controls.getObject().position.x - Math.sin(controls.getObject().rotation.y - Math.PI / 4) * 0.3,
-		controls.getObject().position.y - 0.1,
+		controls.getObject().position.y - 0.1+Math.sin(delta)*0.04,
 		controls.getObject().position.z - Math.cos(controls.getObject().rotation.y - Math.PI / 4) * 0.3
 	);
 	meshes["gun"].rotation.y = controls.getObject().rotation.y + Math.PI;
@@ -466,8 +708,27 @@ animate = function () {
         controls.getObject().position.y = player.height;
         player.speed = 0.025;
     }
+
+
     renderer.render(scene, camera);
-    
+    renderer.setClearColor( 0x000000 );
+
+     renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
+
+     renderer.render( scene, camera );
+
+     renderer.setClearColor( 0x333333 );
+
+     renderer.clearDepth();
+
+    	renderer.setScissorTest( true );
+
+     renderer.setScissor( 16, window.innerHeight - insetHeight - 16, insetWidth, insetHeight );
+     renderer.setViewport( 16, window.innerHeight - insetHeight - 16, insetWidth, insetHeight );
+
+   	renderer.render( scene, cameraOrtho );
+
+     renderer.setScissorTest( false );
 
 };
 
@@ -496,32 +757,32 @@ window.addEventListener("keydown", function (e) {
 });
 
 window.addEventListener("keyup", function (e) {
-     
+
     console.log("keyboarda"+e.keyCode);
     //EventListener for the [P] key which pauses or resumes the game depending on its state.
     if(e.keyCode==80){
         console.log("keyboarda"+e.keyCode);
-        if(paused && started){        
+        if(paused && started){
             //animate=true;
-            document.getElementById("pauseMenu").style.display = "none";   
+            document.getElementById("pauseMenu").style.display = "none";
             document.getElementById("pause").classList.remove("hidden");
             document.getElementById("info14").style.display = "block";
-            document.getElementById("pause").style.cursor = "default";   
+            document.getElementById("pause").style.cursor = "default";
             console.log("keyboard[76]"+keyboard[80]);
             console.log("keyboard[9009]"+keyboard[80]);
             //document.getElementById("pauseMenu").style.display = "none";
             paused = false;
             requestAnimationFrame(animate);
             //animate();
-            //init();   
+            //init();
         }else if(!paused && started){
-                    
+
             document.getElementById("pauseMenu").style.display = "block";
             document.getElementById("close").style.display = "none";
             document.getElementById("info1").style.display = "none";
             document.getElementById("info14").style.display = "none";
             document.getElementById("pause").classList.add("hidden");
-            
+
             paused = true;
         }
     }
@@ -529,20 +790,20 @@ window.addEventListener("keyup", function (e) {
     //EventListener when the [C] key is pressed which closes and opens the game info depending on its state.
     if(e.keyCode==67){
         console.log("keyboarda"+e.keyCode);
-        if(info && started){        
-            
+        if(info && started){
+
              document.getElementById("info14").style.display = "block";
              document.getElementById("info1").style.display = "none";
              document.getElementById("close").style.display = "none";
-        
+
             info = false;
-            
+
         }else if(!info && started){
-                    
+
             document.getElementById("info14").style.display = "none";
             document.getElementById("info1").style.display = "block";
             document.getElementById("close").style.display = "block";
-            
+
             info = true;
         }
     }
@@ -567,11 +828,17 @@ window.addEventListener("resize", function (e) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+    insetWidth = window.innerHeight / 4;
+  insetHeight = window.innerHeight / 4;
+
+ cameraOrtho.aspect = insetWidth / insetHeight;
+ cameraOrtho.updateProjectionMatrix();
+
 });
 
 //Pausing the game anytime during play.
 pauseGame = function(){
-    
+
     document.getElementById("pauseMenu").style.display = "block";
     document.getElementById("close").style.display = "none";
     document.getElementById("info1").style.display = "none";
@@ -584,8 +851,8 @@ pauseGame = function(){
 resumeGame = function(){
 
     //animate=true;
-    document.getElementById("pauseMenu").style.display = "none"; 
-    document.getElementById("info14").style.display = "block";  
+    document.getElementById("pauseMenu").style.display = "none";
+    document.getElementById("info14").style.display = "block";
     document.getElementById("pause").classList.remove("hidden");
     console.log("keyboard[76]"+keyboard[80]);
     console.log("keyboard[76]"+keyboard[80]);
@@ -593,7 +860,7 @@ resumeGame = function(){
     paused = false;
     requestAnimationFrame(animate);
     //animate();
-    //init();   
+    //init();
 }
 
 //restarting the game from any position during gameplay
@@ -613,14 +880,13 @@ startGame = function(){
 }
 
 //Quits the game and goes back to Start Menu
-quitGame = function()
-{
+quitGame = function(){
 
-    
+
     location.href="index.html"
    /* console.log("clear Render")
     paused = true;
-    
+
 	scene.add(controls.getObject());
     controls.getObject().position.set(0, player.height, -4.5);
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
@@ -634,12 +900,12 @@ quitGame = function()
 
     //skybox.dispose()
     //var obj = renderer.getSize();
-    /*while(scene.children.length > 0){ 
-        scene.remove(scene.children[0]); 
+    /*while(scene.children.length > 0){
+        scene.remove(scene.children[0]);
     }
 
     scene.clear();*/
-    
+
     //init();
     //requestAnimationFrame(animate);
 
@@ -687,13 +953,11 @@ gameInfo = function(){
     document.getElementById("info1").style.display = "block";
     document.getElementById("close").style.display = "block";
 }
-/*var gameObj = "Hey gamer, welcome to Shooter. The game objective is" + 
+/*var gameObj = "Hey gamer, welcome to Shooter. The game objective is" +
  "pretty simple, Kill the zombies before they kill you. Yes, that simple." +
-  "Here is how it goes, the zombies will come your way, whether you decide " + 
-  "to run, hide or I don't know what, they will find you and they will kill you." + 
-  "The more you run, the more zombies there'll be and trust me you don't wanna deal" + 
+  "Here is how it goes, the zombies will come your way, whether you decide " +
+  "to run, hide or I don't know what, they will find you and they will kill you." +
+  "The more you run, the more zombies there'll be and trust me you don't wanna deal" +
   "with hundreds and hundres of zombies, so kill as much as you can as quickly as you can" +
   "under the specified time period";*/
-    
 init();
-
