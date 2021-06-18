@@ -405,8 +405,6 @@ animate = function () {
         requestAnimationFrame(animate);
         return;
     }
-
-
 		let delta = clock.getDelta();
 	            portalParticles.forEach(p => {
 	                p.rotation.z -= delta *1.5;
@@ -466,25 +464,27 @@ animate = function () {
         controls.getObject().position.y = player.height;
         player.speed = 0.025;
     }
+
+
     renderer.render(scene, camera);
     renderer.setClearColor( 0x000000 );
 
-    renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
+     renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
 
-    renderer.render( scene, camera );
+     renderer.render( scene, camera );
 
-    renderer.setClearColor( 0x333333 );
+     renderer.setClearColor( 0x333333 );
 
-    renderer.clearDepth();
+     renderer.clearDepth();
 
-   	renderer.setScissorTest( true );
+    	renderer.setScissorTest( true );
 
-    renderer.setScissor( 16, window.innerHeight - insetHeight - 16, insetWidth, insetHeight );
-    renderer.setViewport( 16, window.innerHeight - insetHeight - 16, insetWidth, insetHeight );
+     renderer.setScissor( 16, window.innerHeight - insetHeight - 16, insetWidth, insetHeight );
+     renderer.setViewport( 16, window.innerHeight - insetHeight - 16, insetWidth, insetHeight );
 
-  	renderer.render( scene, cameraOrtho );
+   	renderer.render( scene, cameraOrtho );
 
-    renderer.setScissorTest( false );
+     renderer.setScissorTest( false );
 
 };
 
@@ -585,7 +585,8 @@ window.addEventListener("resize", function (e) {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     insetWidth = window.innerHeight / 4;
-    insetHeight = window.innerHeight / 4;
+  insetHeight = window.innerHeight / 4;
+
  cameraOrtho.aspect = insetWidth / insetHeight;
  cameraOrtho.updateProjectionMatrix();
 
