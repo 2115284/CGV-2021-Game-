@@ -136,9 +136,9 @@ models = {
 };
 meshes = {};
 //function that initiates sound
- playSound=function(){
+ playSoundGun=function(){
    const audioLoader = new THREE.AudioLoader();
-  audioLoader.load("factory.ogg", function(buffer) {
+  audioLoader.load("m4a1_s.mp3", function(buffer) {
     sound.setBuffer( buffer );
     sound.setVolume(0.5);
     sound.play();
@@ -152,7 +152,7 @@ const sound = new THREE.Audio( listener );
 //window.addEventListener('touchstart', playSound);
 document.addEventListener('click', function (e) {
     if(started){
-        playSound();
+        playSoundGun();
     }
 });
 
@@ -443,7 +443,7 @@ animate = function () {
     if(keyboard[67]){//C key
 
     }
-
+skybox.rotation.y += 0.001;
 
 	//Position gun in front of player
 	meshes["gun"].position.set(
