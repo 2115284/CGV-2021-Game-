@@ -237,15 +237,8 @@ init = function () {
         ])
     );
 
-    //scene.add(skybox);
-    let urls= ['img/Lycksele2/negx.jpg','img/Lycksele2/posx.jpg',
-    'img/Lycksele2/negy.jpg','img/Lycksele2/posy.jpg',
-    'img/Lycksele2/negz.jpg','img/Lycksele2/posz.jpg',
-
-];
-
-let loaders = new THREE.CubeTextureLoader();
-scene.background = loaders.load(urls);
+    scene.add(skybox);
+    
 
 
 
