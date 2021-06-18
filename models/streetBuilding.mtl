@@ -1,0 +1,150 @@
+# Blender MTL File: 'streetBuilding.blend'
+# Material Count: 14
+
+newmtl 01_Cloror.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Kd C:\\Users\\rotondwa_moses\\blenderkit_data\\models\\street_module_01_-_lowpoly_-_straight_street_large_4527ba66-d039-43c3-922e-396dfa23ee51\\textures\\D01.JPG
+
+newmtl FREE
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.004672 0.004776 0.001818
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl GLASS
+Ns 900.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.281205 0.169948 0.012046
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.112893 0.115578 0.041985
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl Material.003
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl None
+Ns 500
+Ka 0.8 0.8 0.8
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+newmtl ROOM
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.056762 0.449470 0.537207
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+
+newmtl WALL
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.149361 0.165695 0.095637
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -bm 10.000000 C:\\Users\\rotondwa_moses\\Desktop\\product blender\\3DScans0422_4_download600.jpg
+
+newmtl rock_wall
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -s 3.000000 3.000000 3.000000 assets\\models\\large_pebbles_1_5m_surface_f3dbd05f-1680-401c-9eb4-e1f2c979e42a\\textures_1k\\rock wall_normal.jpg
+refl -s 3.000000 3.000000 3.000000 assets\\models\\large_pebbles_1_5m_surface_f3dbd05f-1680-401c-9eb4-e1f2c979e42a\\textures_1k\\rock wall_metallic.jpg
+
+newmtl rock_wall.001
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -s 3.000000 3.000000 3.000000 assets\\models\\large_pebbles_1_5m_surface_f3dbd05f-1680-401c-9eb4-e1f2c979e42a\\textures_1k\\rock wall_normal.jpg
+refl -s 3.000000 3.000000 3.000000 assets\\models\\large_pebbles_1_5m_surface_f3dbd05f-1680-401c-9eb4-e1f2c979e42a\\textures_1k\\rock wall_metallic.jpg
+
+newmtl rock_wall.002
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -s 3.000000 3.000000 3.000000 assets\\models\\large_pebbles_1_5m_surface_f3dbd05f-1680-401c-9eb4-e1f2c979e42a\\textures_1k\\rock wall_normal.jpg
+refl -s 3.000000 3.000000 3.000000 assets\\models\\large_pebbles_1_5m_surface_f3dbd05f-1680-401c-9eb4-e1f2c979e42a\\textures_1k\\rock wall_metallic.jpg
+
+newmtl rock_wall.003
+Ns 225.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump -s 3.000000 3.000000 3.000000 assets\\models\\pebbles_bfd3fc14-1ee0-4c72-83c1-fc6705c8a097\\textures_1k\\rock wall_normal.jpg
+refl -s 3.000000 3.000000 3.000000 assets\\models\\pebbles_bfd3fc14-1ee0-4c72-83c1-fc6705c8a097\\textures_1k\\rock wall_metallic.jpg
