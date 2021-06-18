@@ -14,7 +14,7 @@ var meshFloor;
 var started=true;
 var paused = false;
 var info = true;
-//Array to store Bullets
+
 bullets = [];
 
 
@@ -238,7 +238,7 @@ init = function () {
     );
 
     scene.add(skybox);
-
+    
 
 
 
@@ -268,6 +268,20 @@ init = function () {
     loadModel2('fbx_models/Zombie Run.fbx')
     loadModel4('fbx_models/Walking.fbx')
     loadModel4('fbx_models/Zombie biting.fbx')
+
+        sphereCamera = new THREE.CubeCamera(1,1000,500);
+        sphereCamera.position.set(0,50,0)
+        scene.add(sphereCamera)
+
+        let sphereMaterial = new THREE.MeshBasicMaterial(
+            {
+                envMap:sphereCamera.renderTarget
+            }
+        );
+        let sphereGeo = new THREE.SphereGeometry(350,50,50);
+        let sphere = new THREE.Mesh(sphereGeo,sphereMaterial);
+        sphere.position.set(0,10,0);
+        scene.add(sphere);
 
     flesh= new THREE.PointLight(0x062d89,30,500,1.7);
     flesh.position.set(200,300,100);
@@ -305,7 +319,7 @@ init = function () {
         transparent: true
       });
       //Randomly adding cloud to the scene
-
+      
       for(let p=0;p<25;p++){
         let cloud = new THREE.Mesh(cloudGeo,cloudMaterial);
         cloud.position.set(
@@ -349,7 +363,7 @@ function loadEnvironment(LoadingManager){
 loader=new THREE.FBXLoader();
 	loader.load( "environment.fbx", function ( object ) {
 		game.scene.add(object);
-    object.scale.set(0.064,0.064,0.064);
+    object.scale.set(0.01,0.01,0.01);
 		object.receiveShadow = true;
 		object.name = "Environment";
 
@@ -456,7 +470,7 @@ onResourcesLoaded = function () {
                 var loader = new THREE.FBXLoader();
                 loader.load(file, function (object) {
                   object.mixer = new THREE.AnimationMixer(object);
-                  object.scale.multiplyScalar(0.005);
+                  object.scale.multiplyScalar(0.005); 
                   mixers.push(object.mixer);
                   var action = object.mixer.clipAction(object.animations[0]);
                   action.play();
@@ -478,7 +492,7 @@ onResourcesLoaded = function () {
           object.rotation.z=0;
           scene.add(object);
                  }
-
+                
                   object.updateMatrix();
                 });
 
@@ -488,7 +502,7 @@ onResourcesLoaded = function () {
                 var loader = new THREE.FBXLoader();
                 loader.load(file1, function (object) {
                   object.mixer = new THREE.AnimationMixer(object);
-                  object.scale.multiplyScalar(0.005);
+                  object.scale.multiplyScalar(0.005); 
                   mixers.push(object.mixer);
                   var action = object.mixer.clipAction(object.animations[0]);
                   action.play();
@@ -498,10 +512,10 @@ onResourcesLoaded = function () {
                       child.receiveShadow = true;
                     }
                   });
-                  scene.add(object);
+                  scene.add(object);        
                   object.position.x = -8;
                   object.position.z = 1.5;
-                  object.rotation.set( 0.0, 3.5, 0.0 );
+                  object.rotation.set( 0.0, 3.5, 0.0 );  
                   //object.position.z += speed * delta;
                   object.updateMatrix();
                 });
@@ -512,7 +526,7 @@ onResourcesLoaded = function () {
                 var loader = new THREE.FBXLoader();
                 loader.load(file2, function (object) {
                   object.mixer = new THREE.AnimationMixer(object);
-                  object.scale.multiplyScalar(0.005);
+                  object.scale.multiplyScalar(0.005); 
                   mixers.push(object.mixer);
                   var action = object.mixer.clipAction(object.animations[0]);
                   action.play();
@@ -522,10 +536,10 @@ onResourcesLoaded = function () {
                       child.receiveShadow = true;
                     }
                   });
-                  scene.add(object);
+                  scene.add(object);        
                   object.position.x = -9;
                   object.position.z = 1.7;
-                  object.rotation.set( 0.0, 3.5, 0.0 );
+                  object.rotation.set( 0.0, 3.5, 0.0 );  
                   //object.position.z += speed * delta;
                   object.updateMatrix();
                 });
@@ -536,7 +550,7 @@ onResourcesLoaded = function () {
                 var loader = new THREE.FBXLoader();
                 loader.load(file4, function (object) {
                   object.mixer = new THREE.AnimationMixer(object);
-                  object.scale.multiplyScalar(0.005);
+                  object.scale.multiplyScalar(0.005); 
                   mixers.push(object.mixer);
                   var action = object.mixer.clipAction(object.animations[0]);
                   action.play();
@@ -546,9 +560,9 @@ onResourcesLoaded = function () {
                       child.receiveShadow = true;
                     }
                   });
-                  scene.add(object);
+                  scene.add(object);        
                   object.position.x = -7.5;
-                  object.rotation.set( 0.0, 3.5, 0.0 );
+                  object.rotation.set( 0.0, 3.5, 0.0 );  
                   //object.position.z += speed * delta;
                   object.updateMatrix();
                 });
@@ -582,15 +596,15 @@ onResourcesLoaded = function () {
               });
             }
 
-//animate function where all animations occur
+
 animate = function () {
 
 
     cloudParticles.forEach(p => {
         p.rotation.z -=0.002;
       });
-
-
+    
+    
       if(Math.random() > 0.93 || flesh.power >100){
         if(flesh.power <100)
         flesh.position.set(
@@ -600,8 +614,9 @@ animate = function () {
         );
         flesh.power = 60 + Math.random()*500;
       }
-
-
+       
+      sphereCamera.updateCubeMap(renderer,scene);
+    
      rainGeo.vertices.forEach(p =>{
         p.velocity -= 0.1 + Math.random()*0.1;
         p.y += p.velocity;
@@ -611,14 +626,13 @@ animate = function () {
         }
       } );
       rainGeo.verticesNeedUpdate = true;
-
+    
 
 
     if (resourcesLoaded == false && !paused) {
         requestAnimationFrame(animate);
         return;
     }
-    //Delta to use for animation
 		let delta = clock.getDelta();
 	            portalParticles.forEach(p => {
 	                p.rotation.z -= delta *1.5;
@@ -637,12 +651,12 @@ animate = function () {
                 if (mixers.length > 0) {
                     zdelta = clock.getDelta();
                     for (var i = 0; i < mixers.length; i++) {
-
+                
                       mixers[i].update(delta);
                       //object.position.z += speed * delta;
                      }
-
-                  }
+                
+                  }       
 
     for (let bullet of bullets) {
         bullet.update();
@@ -718,7 +732,22 @@ skybox.rotation.y += 0.001;
 window.addEventListener("keydown", function (e) {
     console.log("keyboardown"+e.keyCode);
     keyboard[event.keyCode] = true;
-
+    /*if (e.keyCode==87) { //W key
+        controls.getObject().position.x -= Math.sin(controls.getObject().rotation.y) * player.speed;
+        controls.getObject().position.z -= Math.cos(controls.getObject().rotation.y) * player.speed;
+    }
+    if (e.keyCode==83) { //S key
+        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y) * player.speed / 2;
+        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y) * player.speed / 2;
+    }
+    if (keyboard[65]) { //A key
+        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y - Math.PI / 2) * player.speed / 2;
+        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y - Math.PI / 2) * player.speed / 2;
+    }
+    if (keyboard[68]) { //D key
+        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
+        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
+    }*/
 });
 
 window.addEventListener("keyup", function (e) {
@@ -775,7 +804,7 @@ window.addEventListener("keyup", function (e) {
     keyboard[event.keyCode] = false;
 });
 
-//As soon as a click is detected
+
 window.addEventListener("click", function (e) {
     if(!paused && started){
     if (player.coolDown == 0) {
@@ -789,7 +818,6 @@ window.addEventListener("click", function (e) {
     }
 }
 });
-//resize Window
 window.addEventListener("resize", function (e) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -850,6 +878,45 @@ quitGame = function(){
 
 
     location.href="index.html"
+   /* console.log("clear Render")
+    paused = true;
+
+	scene.add(controls.getObject());
+    controls.getObject().position.set(0, player.height, -4.5);
+    controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
+    controls.getObject().rotation.y = Math.PI;
+
+
+    renderer.render(scene,camera)
+
+
+*/
+
+    //skybox.dispose()
+    //var obj = renderer.getSize();
+    /*while(scene.children.length > 0){
+        scene.remove(scene.children[0]);
+    }
+
+    scene.clear();*/
+
+    //init();
+    //requestAnimationFrame(animate);
+
+
+    /*
+    var to_remove = [];
+
+    scene.traverse ( function( child ) {
+        if ( child instanceof THREE.Mesh && !child.userData.keepMe === true ) {
+            to_remove.push( child );
+         }
+    } );
+
+    for ( var i = 0; i < to_remove.length; i++ ) {
+        scene.remove( to_remove[i] );
+    }
+    */
 
 
 }
