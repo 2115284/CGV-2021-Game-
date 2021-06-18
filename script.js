@@ -1,8 +1,9 @@
 
 
+let cameraOrtho,insetWidth, insetHeight;
 
 var scene,camera,renderer,mesh,controls, clock,portalParticles=[],smokeParticles=[];
-
+var mapCamera, mapWidth = 256, mapHeight = 256, mapComposer;
 var meshFloor;
 var started=true;
 var paused = false;
@@ -134,7 +135,7 @@ models = {
     }
 };
 meshes = {};
-
+//function that initiates sound
  playSound=function(){
    const audioLoader = new THREE.AudioLoader();
   audioLoader.load("factory.ogg", function(buffer) {
@@ -159,8 +160,12 @@ init = function () {
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 1000);
     loadingManager = new THREE.LoadingManager();//loading manager to handle items loading
+
     console.log("Loading content ...")
     loadingManager.onLoad = onResourcesLoaded;
+    cameraOrtho = new THREE.OrthographicCamera( - 0.5, 0.5 , 0.5, -0.5,  0.01, 10 );
+    camera.add( cameraOrtho );
+
     scene.fog=new THREE.FogExp2(0x03544e,0.001);
     ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
@@ -400,6 +405,8 @@ animate = function () {
         requestAnimationFrame(animate);
         return;
     }
+
+
 		let delta = clock.getDelta();
 	            portalParticles.forEach(p => {
 	                p.rotation.z -= delta *1.5;
@@ -460,7 +467,24 @@ animate = function () {
         player.speed = 0.025;
     }
     renderer.render(scene, camera);
+    renderer.setClearColor( 0x000000 );
 
+    renderer.setViewport( 0, 0, window.innerWidth, window.innerHeight );
+
+    renderer.render( scene, camera );
+
+    renderer.setClearColor( 0x333333 );
+
+    renderer.clearDepth();
+
+   	renderer.setScissorTest( true );
+
+    renderer.setScissor( 16, window.innerHeight - insetHeight - 16, insetWidth, insetHeight );
+    renderer.setViewport( 16, window.innerHeight - insetHeight - 16, insetWidth, insetHeight );
+
+  	renderer.render( scene, cameraOrtho );
+
+    renderer.setScissorTest( false );
 
 };
 
@@ -560,6 +584,11 @@ window.addEventListener("resize", function (e) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
+    insetWidth = window.innerHeight / 4;
+    insetHeight = window.innerHeight / 4;
+ cameraOrtho.aspect = insetWidth / insetHeight;
+ cameraOrtho.updateProjectionMatrix();
+
 });
 
 //Pausing the game anytime during play.
