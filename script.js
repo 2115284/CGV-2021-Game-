@@ -269,19 +269,9 @@ init = function () {
     loadModel4('fbx_models/Walking.fbx')
     loadModel4('fbx_models/Zombie biting.fbx')
 
-        sphereCamera = new THREE.CubeCamera(1,1000,500);
-        sphereCamera.position.set(0,50,0)
-        scene.add(sphereCamera)
+    
 
-        let sphereMaterial = new THREE.MeshBasicMaterial(
-            {
-                envMap:sphereCamera.renderTarget
-            }
-        );
-        let sphereGeo = new THREE.SphereGeometry(350,50,50);
-        let sphere = new THREE.Mesh(sphereGeo,sphereMaterial);
-        sphere.position.set(0,10,0);
-        scene.add(sphere);
+  
 
     flesh= new THREE.PointLight(0x062d89,30,500,1.7);
     flesh.position.set(200,300,100);
@@ -615,7 +605,7 @@ animate = function () {
         flesh.power = 60 + Math.random()*500;
       }
        
-      sphereCamera.updateCubeMap(renderer,scene);
+   
     
      rainGeo.vertices.forEach(p =>{
         p.velocity -= 0.1 + Math.random()*0.1;
