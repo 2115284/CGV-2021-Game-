@@ -7,7 +7,7 @@ var meshFloor;
 var started=true;
 var paused = false;
 var info = true;
-
+//Array to store Bullets
 bullets = [];
 
 //PointerLock controls
@@ -256,15 +256,7 @@ init = function () {
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
     controls.getObject().rotation.y = Math.PI;
     //Create a reflective sphere
-   let sphereMaterial = new THREE.MeshBasicMaterial();
-   let sphereGeo =  new THREE.SphereGeometry(400, 50, 50);
-   let mirrorSphere = new THREE.Mesh(sphereGeo, sphereMaterial);
-   mirrorSphere.position.set(0, 5, 0);
-   scene.add(mirrorSphere);
-   sphereCamera = new THREE.CubeCamera(1, 1000, 500);
-   sphereCamera.position.set(0, 5, 0);
-   scene.add(sphereCamera);
-   sphereMaterial = new THREE.MeshBasicMaterial( {envMap: sphereCamera.renderTarget} );
+
     renderer = new THREE.WebGLRenderer({ antialiasing: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setClearColor(scene.fog.color);
@@ -281,7 +273,7 @@ loadEnvironment=function(LoadingManager){
 loader=new THREE.FBXLoader();
 	loader.load( "/environment.fbx", function ( object ) {
 		game.scene.add(object);
-    object.scale.set(0.01,0.01,0.01);
+    object.scale.set(0.064,0.064,0.064);
 		object.receiveShadow = true;
 		object.name = "Environment";
 
@@ -382,7 +374,7 @@ onResourcesLoaded = function () {
 
 	            });
 	        }
-
+//function for loading animated model
           _LoadAnimatedModel=function() {
               const loader = new THREE.FBXLoader();
 
@@ -410,12 +402,13 @@ onResourcesLoaded = function () {
               });
             }
 
-
+//animate function where all animations occur
 animate = function () {
     if (resourcesLoaded == false && !paused) {
         requestAnimationFrame(animate);
         return;
     }
+    //Delta to use for animation
 		let delta = clock.getDelta();
 	            portalParticles.forEach(p => {
 	                p.rotation.z -= delta *1.5;
@@ -430,7 +423,7 @@ animate = function () {
                 if(!paused){
                     requestAnimationFrame(animate);
                 }
-
+//for every bullet in bullet array
     for (let bullet of bullets) {
         bullet.update();
     }
@@ -499,7 +492,7 @@ animate = function () {
    	renderer.render( scene, cameraOrtho );
 
      renderer.setScissorTest( false );
-     sphereCamera.updateCubeMap( renderer, scene );
+
 
 };
 
@@ -509,22 +502,7 @@ animate = function () {
 window.addEventListener("keydown", function (e) {
     console.log("keyboardown"+e.keyCode);
     keyboard[event.keyCode] = true;
-    /*if (e.keyCode==87) { //W key
-        controls.getObject().position.x -= Math.sin(controls.getObject().rotation.y) * player.speed;
-        controls.getObject().position.z -= Math.cos(controls.getObject().rotation.y) * player.speed;
-    }
-    if (e.keyCode==83) { //S key
-        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y) * player.speed / 2;
-        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y) * player.speed / 2;
-    }
-    if (keyboard[65]) { //A key
-        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y - Math.PI / 2) * player.speed / 2;
-        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y - Math.PI / 2) * player.speed / 2;
-    }
-    if (keyboard[68]) { //D key
-        controls.getObject().position.x += Math.sin(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
-        controls.getObject().position.z += Math.cos(controls.getObject().rotation.y + Math.PI / 2) * player.speed / 2;
-    }*/
+
 });
 
 window.addEventListener("keyup", function (e) {
@@ -581,7 +559,7 @@ window.addEventListener("keyup", function (e) {
     keyboard[event.keyCode] = false;
 });
 
-
+//As soon as a click is detected
 window.addEventListener("click", function (e) {
     if(!paused && started){
     if (player.coolDown == 0) {
@@ -595,6 +573,7 @@ window.addEventListener("click", function (e) {
     }
 }
 });
+//resize Window
 window.addEventListener("resize", function (e) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     camera.aspect = window.innerWidth / window.innerHeight;
@@ -655,45 +634,6 @@ quitGame = function(){
 
 
     location.href="index.html"
-   /* console.log("clear Render")
-    paused = true;
-
-	scene.add(controls.getObject());
-    controls.getObject().position.set(0, player.height, -4.5);
-    controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
-    controls.getObject().rotation.y = Math.PI;
-
-
-    renderer.render(scene,camera)
-
-
-*/
-
-    //skybox.dispose()
-    //var obj = renderer.getSize();
-    /*while(scene.children.length > 0){
-        scene.remove(scene.children[0]);
-    }
-
-    scene.clear();*/
-
-    //init();
-    //requestAnimationFrame(animate);
-
-
-    /*
-    var to_remove = [];
-
-    scene.traverse ( function( child ) {
-        if ( child instanceof THREE.Mesh && !child.userData.keepMe === true ) {
-            to_remove.push( child );
-         }
-    } );
-
-    for ( var i = 0; i < to_remove.length; i++ ) {
-        scene.remove( to_remove[i] );
-    }
-    */
 
 
 }
