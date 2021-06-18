@@ -22,6 +22,7 @@
   <div id="startScreen1">
     <button onclick="GameLevels()" id="startbtn">START GAME</button>
     <button onclick="objective()" id="objbtn">GAME OBJECTIVE</button>
+    <button onclick="credits()" id="crdbtn">CREDITS</button>
     <button type="button"    onclick="window.open('', '_self', ''); window.close();" id="exitbtn">EXIT</button>
   </div>
   <div id="objectiveContainer">
@@ -30,7 +31,7 @@
       <div>The world is under attack, zombies have taken over, the world is sick, the human race is ending. 
          This virus developed in the labs by the government is spreading very rapidly and if 
          nothing is done to stop the spreading, humans will be extinct in about, a month? or 2 weeks?
-         or even less. 
+         or even less.  <br>  <br>
 
          Hey soldier, welcome to Shooter. The game objective is pretty much simple, kill the zombies 
          before they attack you. Yes, that simple. This will reduce the spread of this virus, you get attacked, 
@@ -48,6 +49,7 @@
       </div>
     </div>
     <div id="GameLevels">
+      <button onclick="back()"><img src="icons8-macos-close-24.png"/></button>
       <div id="TheLevels">
         <h4>Choose A Level</h4>
         <div id="LevelButtons">
@@ -62,8 +64,36 @@
            </button>
         </div> 
       </div>
-     
-    </div>>
+    </div>
+    <div id="creditsContainer">
+      <div id="creditsContent">
+        <h4>CREDITS</h4>
+        <div>
+          <span style="color: rgb(36, 0, 6)"> Gun</span>   - https://kenney.nl/ <br>
+          <span style="color: rgb(36, 0, 6)"> Tree</span>  - https://kenney.nl/  <br>
+          <span style="color: rgb(36, 0, 6)">  LightPost</span> - https://kenney.nl/ <br>
+          <span style="color: rgb(36, 0, 6)"> EnvironmentIdea</span> - Taken from Nik Levers three.js course on Udemy <br>
+          <span style="color: rgb(36, 0, 6)"> FactorySounds</span> - elemnts.envato.com <br>
+          <span style="color: rgb(36, 0, 6)"> PortalIdea</span> - RedStapler three.js course <br>
+          <span style="color: rgb(36, 0, 6)"> RainIdea</span> - CodePen.io three.js course  <br>
+          <span style="color: rgb(36, 0, 6)"> GuGunShotSoundn</span> - elements.envato.com  <br> <br>
+        
+          Game Developers:  <br>  <br>
+
+          <span style="color: #1900ff77"> Calvin Muchemwa </span> <br>
+          <span style="color: #1900ff77"> Pephins Moyo(14)</span>  <br>
+          <span style="color: #1900ff77"> Rotondwa Mavhengani</span>  <br>
+          <span style="color: #1900ff77"> Themba Xaba</span>
+        </div>
+        </div>
+        <div class="row" id="startGame">
+          <button onclick="cancel()">
+            <img src="icons8-macos-close-24.png"/>
+          </button>
+        </div>
+         </div>
+
+   
   </div>
 
   <!--
@@ -72,8 +102,33 @@
   </div>-->
   <script>
 
-document.getElementById("objectiveContainer").style.display = "none";
 
+
+document.getElementById("objectiveContainer").style.display = "none";
+document.getElementById("creditsContainer").style.display = "none";
+
+cancel = function(){
+
+  document.getElementById("creditsContainer").style.display = "none";
+  location.href="index.html"
+}
+back = function(){
+
+document.getElementById("GameLevels").style.display = "none";
+location.href="index.html"
+//document.getElementById("startScreen1").style.display = "block";
+}
+
+credits = function(){
+
+  document.getElementById("startbtn").style.display = "none";
+  document.getElementById("objbtn").style.display = "none";
+  document.getElementById("exitbtn").style.display = "none";
+  document.getElementById("crdbtn").style.display = "none";
+  document.getElementById("creditsContainer").style.display = "block";
+  
+
+}
 
 objective = function(){
 
@@ -81,17 +136,22 @@ objective = function(){
   document.getElementById("startbtn").style.display = "none";
   document.getElementById("objbtn").style.display = "none";
   document.getElementById("exitbtn").style.display = "none";
+  document.getElementById("crdbtn").style.display = "none";
 
 
-}  
+} 
+ 
 Ok = function(){
   document.getElementById("objectiveContainer").style.display = "none";
   document.getElementById("startbtn").style.display = "block";
   document.getElementById("objbtn").style.display = "block";
   document.getElementById("exitbtn").style.display = "block";
+  document.getElementById("crdbtn").style.display = "block";
+
+  
 }
 startGame = function(){
-
+  location.href="game.html"
    
     //document.getElementById("game").classList.remove("hidden");
     //init();
@@ -108,7 +168,6 @@ var snd = new Audio();
 snd.src = 'https://www.soundjay.com/button/sounds/beep-10.mp3';
 
 startLevel1 = function(){
-  snd.play();
 document.getElementById("startScreen1").classList.add("hidden");
 location.href="game.html"
 //document.getElementById("game").classList.remove("hidden");
@@ -118,7 +177,7 @@ started =true;
 }
 
 startLevel2 = function(){
-  document.getElementById("startScreen1").classList.add("hidden");
+ document.getElementById("startScreen1").classList.add("hidden");
  location.href="level2.html"
 } 
   </script>
