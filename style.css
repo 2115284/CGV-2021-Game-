@@ -3,6 +3,8 @@ body,html {
 	padding: 0;
 	width: 100%;
 	height: 100%;
+	z-index: 10;
+	overflow: hidden;
 }
 
 canvas {
@@ -206,9 +208,6 @@ vertical-align: middle;
 margin: 0% 3% 0% 3%;
 cursor: pointer;
 border: 2px solid rgb(0, 0, 0);
-padding: 10px;
-border-radius: 25px;
-padding: 10px;
 border-radius: 35px 15px;
 text-shadow: 1px 1px #272727;
   }
@@ -407,9 +406,6 @@ body {
 	margin: 0% 3% 0% 3%;
 	cursor: pointer;
 	border: 2px solid rgb(0, 0, 0);
-	padding: 10px;
-	border-radius: 25px;
-	padding: 10px;
 	border-radius: 35px 15px;
 	text-shadow: 1px 1px #272727;
 	  }
@@ -426,3 +422,79 @@ body {
 		text-align:left;
 		padding: auto;
 	  }
+	  #timer {
+		position: fixed;
+		display: block;
+		background-color: rgba(3, 3, 3, 0.603);
+		z-index: 2;
+		cursor: pointer;
+		left: 0%;
+		top:90%;
+		color: rgba(0, 128, 0, 0.356);
+		text-align:left;
+		padding: auto;
+	  }
+
+	  #GameLevels {
+		position: fixed;
+		display: none;
+		width: 100%;
+		height: 100%;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background-color: rgba(0, 0, 0, 0.8);
+		z-index: 2;
+		cursor:default ;
+	  }
+
+	  #TheLevels{
+		position:fixed;
+		background-color: rgba(0, 0, 0, 0.9);
+		display: block;
+		width: 30%;
+		height: 20%;
+		top: 40%;
+		left: 35%;
+		border: 2px solid rgb(161, 161, 161);
+		padding: 10px;
+		border-radius: 18px;
+		
+	  }
+
+	  #GameLevels>#TheLevels>h4{
+		text-align: center;
+		top:0%;
+		margin: 0%;
+		color: white;
+		background-color: rgb(36, 0, 6);
+		border: 2px solid rgb(0, 0, 0);
+		padding: 10px;
+		border-radius: 21px 14px;
+	  }
+
+	  #LevelButtons{
+
+		height: 100%;
+		width: 100%;
+		text-align-last: center;
+		margin-top: 10%;
+	}
+  #GameLevels>#TheLevels>#LevelButtons>button{
+  
+  background-color: rgb(255, 0, 0);
+  color: rgb(255, 255, 255);
+  width: 40%;
+  height: 30%;
+  padding: 15px;
+  text-align:center;
+  margin: 0% 3% 0% 3%;
+  cursor: pointer;
+  border: 2px solid rgb(0, 0, 0);
+  border-radius: 35% 15%;
+  text-shadow: 1px 1px #272727;
+	}
+
+
+	

@@ -7,7 +7,8 @@
   </title>
 
     <link rel="stylesheet" href="style.css">
-    <script src="three.min.js"></script>
+    
+    <script src="three.js"></script>
     <script src="js/controls.js"></script>
     <script src="js/objloader.js"></script>
     <script src="js/mtlloader.js"></script>
@@ -19,7 +20,7 @@
   <div id="info"> Press L to Pause the Game </div>
   <div id="info1"> Press [ESC] to access you cursor</div>-->
   <div id="startScreen1">
-    <button onclick="startGame()" id="startbtn">START GAME</button>
+    <button onclick="GameLevels()" id="startbtn">START GAME</button>
     <button onclick="objective()" id="objbtn">GAME OBJECTIVE</button>
     <button type="button"    onclick="window.open('', '_self', ''); window.close();" id="exitbtn">EXIT</button>
   </div>
@@ -46,6 +47,23 @@
         </button>
       </div>
     </div>
+    <div id="GameLevels">
+      <div id="TheLevels">
+        <h4>Choose A Level</h4>
+        <div id="LevelButtons">
+          <button onclick="startLevel1()" onmousedown="snd.play()">
+           LEVEL 1!!
+          </button>
+          <button onclick="startLevel2()" onmousedown="snd.play()"">
+            LEVEL 2!!
+           </button>
+           <button>
+            LEVEL 3!!
+           </button>
+        </div> 
+      </div>
+     
+    </div>>
   </div>
 
   <!--
@@ -74,15 +92,35 @@ Ok = function(){
 }
 startGame = function(){
 
-    document.getElementById("startScreen1").classList.add("hidden");
-    location.href="game.html"
+   
     //document.getElementById("game").classList.remove("hidden");
     //init();
     //requestAnimationFrame(animate);
     started =true;
 }
+GameLevels = function(){
 
-  
+  document.getElementById("GameLevels").style.display = "block";
+  document.getElementById("startScreen1").classList.add("hidden");
+}
+
+var snd = new Audio();
+snd.src = 'https://www.soundjay.com/button/sounds/beep-10.mp3';
+
+startLevel1 = function(){
+  snd.play();
+document.getElementById("startScreen1").classList.add("hidden");
+location.href="game.html"
+//document.getElementById("game").classList.remove("hidden");
+//init();
+//requestAnimationFrame(animate);
+started =true;
+}
+
+startLevel2 = function(){
+  document.getElementById("startScreen1").classList.add("hidden");
+ location.href="level2.html"
+} 
   </script>
 </body>
 </html>

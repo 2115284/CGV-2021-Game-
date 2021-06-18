@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+
+    <title>CGV Shooter
+  </title>
+
+  <link rel="stylesheet" href="style.css">
+    <script src="three.min.js"></script>
+     <script src="three.js"></script>
+    <script type="text/javascript"src="./three.min.js"></script>
+    </script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/objloader.js"></script>
+    <script src="js/mtlloader.js"></script>
+    <script src="FBXLoader.js"></script>
+    <script src="inflate.min.js"></script>
+</head>
+<body>
+  <!--
+  <div id="info"> Press L to Pause the Game </div>
+  <div id="info1"> Press [ESC] to access you cursor</div>-->
+  
+  <button id="pause" onclick="pauseGame()">
+    <img src="img/favicon-16x16.png"/>
+  </button>
+  <button id="close" onclick="closeInfo()">
+  <img src="icons8-macos-close-24.png"/>
+  </button>
+  <button id="info14" onclick="gameInfo()">
+    <img src="icons8-info-26.png"/>
+    </button>
+    <div id="load-screen"><div>
+    </div id="intro"></div>
+	<script src="main.js"></script>
+  <div id="pauseMenu" >
+    <div id="pauseMenuContent">
+      <h3>PAUSED</h3>
+      <div class="row" id="pauseMenuButtons">
+        <button onclick="resumeGame()">RESUME</button>
+        <button onclick="restartGame()">RESTART</button>
+        <button onclick="confirmQuit()">QUIT</button>
+      </div>
+    </div>
+  </div>
+  <div id="quitMenu">
+    <div id="quitConfirm">
+      <h4>Are You Sure You Want To Quit?</h4>
+      <div class="row" id="quitButtons">
+        <button onclick="quitGame()">Confirm</button>
+        <button onclick="cancelQuit()">Cancel</button>
+      </div>
+    </div>
+  </div>
+ 
+  <div id="info1">
+    <div> Press  <span style="color: #ffffff77">[P]</span> to Pause/Resume the game </div>
+    <div>Press <span style="color: #ffffff77">[W]</span>    to Navigate forward</div>
+    <div>Press  <span style="color: #ffffff77">[S]</span> to Navigate backward</div>
+    <div>Press  <span style="color: #ffffff77">[A]</span>   to Navigate to yourleft</div>
+    <div>Press <span style="color: #ffffff77">[D]</span>     to Navigate to your right</div>
+    <div>Press <span style="color: #ffffff77">[ESC]</span> to Access your cursor</div>
+    <div>Press  <span style="color: #ffffff77">[C]</span> to Open/Close this view</div>
+    <div>Use a <span style="color: #ffffff77">Mousepad</span> to Orbit</div>
+    <div>Left click on <span style="color: #ffffff77">Mouse</span> to SHOOT</div>
+  </div>
+  <div id="timer"></div>
+  <div>Time Left:<span id="time">05:00</span> minutes!</div>
+  <div id="Shooter">LEVEL 2</div>
+</body>
+</html>

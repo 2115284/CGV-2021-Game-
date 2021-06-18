@@ -6,12 +6,12 @@
     <title>CGV Shooter
   </title>
 
-    <link rel="stylesheet" href="style.css">
-    
+  <link rel="stylesheet" href="style.css">
     <script src="three.min.js"></script>
-    <script src="js/THREEx.KeyboardState.js"></script>
-    <script src="js/THREEx.FullScreen.js"></script>
-    <script src="js/THREEx.WindowResize.js"></script>
+     <script src="three.js"></script>
+    <script type="text/javascript"src="./three.min.js"></script>
+    </script>
+    <script src="https://cdn.rawgit.com/mrdoob/three.js/master/examples/js/loaders/GLTFLoader.js"></script>
     <script src="js/controls.js"></script>
     <script src="js/objloader.js"></script>
     <script src="js/mtlloader.js"></script>
@@ -22,7 +22,7 @@
   <!--
   <div id="info"> Press L to Pause the Game </div>
   <div id="info1"> Press [ESC] to access you cursor</div>-->
-
+  
   <button id="pause" onclick="pauseGame()">
     <img src="img/favicon-16x16.png"/>
   </button>
@@ -54,16 +54,7 @@
       </div>
     </div>
   </div>
- <!--<div id="objectiveContainer">
-    <div id="gameObjective">
-      <h4>Game Objective</h4>
-      <div>gameObj</div>
-      <div class="row" id="startGame">
-        <button onclick="startGame()">START</button>
-      </div>
-      </div>
-    </div>
-  </div>-->
+ 
   <div id="info1">
     <div> Press  <span style="color: #ffffff77">[P]</span> to Pause/Resume the game </div>
     <div>Press <span style="color: #ffffff77">[W]</span>    to Navigate forward</div>
@@ -75,6 +66,8 @@
     <div>Use a <span style="color: #ffffff77">Mousepad</span> to Orbit</div>
     <div>Left click on <span style="color: #ffffff77">Mouse</span> to SHOOT</div>
   </div>
-  <div id="Shooter">SHOOTER</div>
+  <div id="timer"></div>
+  <div>Time Left:<span id="time">05:00</span> minutes!</div>
+  <div id="Shooter">LEVEL 1</div>
 </body>
 </html>
