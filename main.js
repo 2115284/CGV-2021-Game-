@@ -111,8 +111,8 @@ models = {
 		receiveShadow: false
     },
     bigRock: {
-        obj: "models/rockFormationLarge.obj",
-        mtl: "models/rockFormationLarge.mtl",
+        obj: "models/streetBuilding.obj",
+        mtl: "models/streetBuilding.mtl",
         mesh: null,
 		castShadow: true,
 		receiveShadow: false
@@ -395,16 +395,16 @@ onResourcesLoaded = function () {
     scene.add(lightPost);
 
     meshes["bigRock1"] = models.bigRock.mesh.clone();
-    meshes["bigRock1"].position.set(2, 0, -3);
+    meshes["bigRock1"].position.set(2, -5, -3);
     scene.add(meshes["bigRock1"]);
     meshes["bigRock2"] = models.bigRock.mesh.clone();
-    meshes["bigRock2"].position.set(-2, 0, 3);
+    meshes["bigRock2"].position.set(-2, -5, 3);
     meshes["bigRock2"].rotation.y += Math.PI;
     scene.add(meshes["bigRock2"]);
 
  
 
-    loadEnvironment();
+   // loadEnvironment();
 
 	}
 
