@@ -1,3 +1,4 @@
+//initialize global variables
 var zdelta = 0;
 var localThis = this;
 var mixers = [];
@@ -5,7 +6,7 @@ var scope=this;
 var refObject = this.referenceModel;
 let cloudParticles =[];
 let flesh , rain ,rainGeo =[] , rainCount =200000 ,sphereCamera;
-
+//variables for miniMap
 let cameraOrtho,insetWidth, insetHeight;
 
 var scene,camera,renderer,mesh,controls, clock,portalParticles=[],smokeParticles=[];
@@ -14,10 +15,10 @@ var meshFloor;
 var started=true;
 var paused = false;
 var info = true;
-
+//Array that stores bullest
 bullets = [];
 
-
+//Pointer Locker
 if ("pointerLockElement" in document || "mozPointerLockElement" in document || "webkitPointerLockElement" in document) {
 	let element = document.body;
 	//Setup pointer locking mechanisms
@@ -51,8 +52,11 @@ if ("pointerLockElement" in document || "mozPointerLockElement" in document || "
 } else {
 	alert("Pointer lock error!");
 }
+//Execute when user clicks start
  var startBtn = document.getElementById('startBtn');
 keyboard = {};
+
+//Player array to store player
 player = {
     height: 0.8,
     speed: 0.025,
@@ -60,8 +64,9 @@ player = {
     coolDown: 0
 };
 
-
+//Bullet class for gun Bullets
 class Bullet {
+	//Constructor taking in positions and direction
     constructor (x, y, z, dir) {
         this.dir = dir;
         this.mesh = models.bullet.mesh.clone();
@@ -75,6 +80,7 @@ class Bullet {
         this.mesh.rotation.y = dir;
         scene.add(this.mesh);
     }
+		//Updating position
     update () {
         this.mesh.position.set(
             this.mesh.position.x - Math.sin(this.dir) * 0.1,
@@ -88,7 +94,10 @@ class Bullet {
         }
     }
 }
+//Variable to track loaded resources
 resourcesLoaded = false;
+
+//Array that stores all our models that we'll be using
 models = {
     pineTree: {
         obj: "models/treePine.obj",
@@ -140,9 +149,11 @@ models = {
 		receiveShadow: false
     }
 };
+//Array to store Meshes
 meshes = {};
 //function that initiates sound
  playSoundGun=function(){
+	 //Audio LOader to load Audio
    const audioLoader = new THREE.AudioLoader();
   audioLoader.load("m4a1_s.mp3", function(buffer) {
     sound.setBuffer( buffer );
@@ -157,7 +168,7 @@ const sound = new THREE.Audio( listener );
 }
 //window.addEventListener('touchstart', playSound);
 document.addEventListener('click', function (e) {
-    if(started){
+    if(started){//If mouse keys are clicked then play sound
         playSoundGun();
     }
 });
@@ -168,6 +179,7 @@ init = function () {
     loadingManager = new THREE.LoadingManager();//loading manager to handle items loading
 
     console.log("Loading content ...")
+		//Setting up miniMap
     loadingManager.onLoad = onResourcesLoaded;
     cameraOrtho = new THREE.OrthographicCamera( - 0.5, 0.5 , 0.5, -0.5,  0.01, 10 );
     camera.add( cameraOrtho );
@@ -175,7 +187,7 @@ init = function () {
     scene.fog=new THREE.FogExp2(0x03544e,0.001);
     ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
     scene.add(ambientLight);
-
+//Adding a PointLight to our Scene
     pointLight = new THREE.PointLight(0xffffff, 0.5, 50);
     pointLight.position.set(8, 12, 8);
     pointLight.castShadow = true;
@@ -206,8 +218,9 @@ init = function () {
             });
         })(_key);
     }
-
+//Initialize our skybox that represents environment
     skybox = new THREE.Mesh(
+			//Using a CubeGeometry/CubeMap for SkyBox
         new THREE.CubeGeometry(1000, 1000, 1000),
         new THREE.MeshFaceMaterial([
             new THREE.MeshBasicMaterial({
@@ -237,27 +250,28 @@ init = function () {
         ])
     );
 
-    scene.add(skybox);
-    
+    scene.add(skybox);//Adding skybox to our Scene
 
 
 
 
+//Adiing a floor of PlaneGeometry
     floor = new THREE.Mesh(
         new THREE.PlaneGeometry(1000, 1000, 10, 10),
         new THREE.MeshPhongMaterial({color:0xff0000})
     );
+		//Flipping it horizontally
     floor.rotation.x -= Math.PI / 2;
     floor.receiveShadow = true;
     scene.add(floor);
 
-
+//Adding a portalLight
 		portalLight = new THREE.PointLight(0x062d89, 30, 6000, 1.7);
 		portalLight.position.set(0,5200,0);
 		scene.add(portalLight);
     particleSetup();
     _LoadAnimatedModel();
-    loadModel('fbx_models/girl.fbx')
+  /*  loadModel('fbx_models/girl.fbx')
     loadModel('fbx_models/Thriller Idle.fbx')
     loadModel1('fbx_models/Zombie biting.fbx')
     loadModel1('fbx_models/dancer.fbx')
@@ -268,26 +282,28 @@ init = function () {
     loadModel2('fbx_models/Zombie Run.fbx')
     loadModel4('fbx_models/Walking.fbx')
     loadModel4('fbx_models/Zombie biting.fbx')
+*/
 
-    
 
-  
 
+//Adding a flash for rain
     flesh= new THREE.PointLight(0x062d89,30,500,1.7);
     flesh.position.set(200,300,100);
     scene.add(flesh);
-
+//Adding a portlight
       portalLight = new THREE.PointLight(0x062d89, 30, 6000, 1.7);
       portalLight.position.set(0,5200,0);
       scene.add(portalLight);
-
+//Rain Geometry a vector3
     rainGeo = new THREE.Geometry();
     for(let i =0;i<rainCount;i++){
+			//Randomly assign raindrops
       rainDrop = new THREE.Vector3(
         Math.random()*400 - 200,
         Math.random()*500 - 250,
         Math.random()*400 - 200
       );
+			//RainDrop Velocuty
       rainDrop.velocity = {};
       rainDrop.velocity = 0;
     rainGeo.vertices.push(rainDrop);
@@ -300,16 +316,16 @@ init = function () {
     rain = new THREE.Points(rainGeo,rainMaterial);
     scene.add(rain);
 
-    let loader = new THREE.TextureLoader();
+  /*  let loader = new THREE.TextureLoader();
     loader.load("smoke-png-13194.png",function(texture){
 
-      cloudGeo = new THREE.PlaneBufferGeometry(1000,1000);
+      cloudGeo = new THREE.PlaneBufferGeometry(10000,10000);
       cloudMaterial = new THREE.MeshLambertMaterial({
         map:texture,
         transparent: true
       });
       //Randomly adding cloud to the scene
-      
+
       for(let p=0;p<25;p++){
         let cloud = new THREE.Mesh(cloudGeo,cloudMaterial);
         cloud.position.set(
@@ -325,18 +341,18 @@ init = function () {
         scene.add(cloud);
       }
 
-    });
+    });*/
 
 
 
-
+//initializing PointerLock Controls
     controls = new THREE.PointerLockControls(camera);
-	scene.add(controls.getObject());
+  	scene.add(controls.getObject());
     controls.getObject().position.set(0, player.height, -4.5);
     controls.getObject().lookAt(new THREE.Vector3(0, player.height, 0));
     controls.getObject().rotation.y = Math.PI;
 
-
+//Rendering scene
     renderer = new THREE.WebGLRenderer({ antialiasing: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
 		renderer.setClearColor(scene.fog.color);
@@ -406,9 +422,9 @@ onResourcesLoaded = function () {
 
 	}
 
-
+//Setting up particles for portal
 	function particleSetup() {
-	            let loader = new THREE.TextureLoader();
+	            let loader = new THREE.TextureLoader();//Texture Loader
 	            loader.load("./smoke-png-13194.png", function (texture){
 	                portalGeo = new THREE.PlaneBufferGeometry(35,35);
 
@@ -416,14 +432,14 @@ onResourcesLoaded = function () {
 	                    map:texture,
 	                    transparent: true
 	                });
-	                smokeGeo = new THREE.PlaneBufferGeometry(10,10);
+	                smokeGeo = new THREE.PlaneBufferGeometry(10,10);//Plane buffer for particles
 
 	                smokeMaterial = new THREE.MeshStandardMaterial({
 	                    map:texture,
 	                    transparent: true
 	                });
 	                for(let p=880;p>250;p--) {
-	                    let particle = new THREE.Mesh(portalGeo,portalMaterial);
+	                    let particle = new THREE.Mesh(portalGeo,portalMaterial);//Create Particle Mesh
 	                    particle.position.set(
 	                        0.5 * p * Math.cos((4 * p * Math.PI) / 180),
 	                        0.5 * p * Math.sin((4 * p * Math.PI) / 180),
@@ -460,7 +476,7 @@ onResourcesLoaded = function () {
                 var loader = new THREE.FBXLoader();
                 loader.load(file, function (object) {
                   object.mixer = new THREE.AnimationMixer(object);
-                  object.scale.multiplyScalar(0.005); 
+                  object.scale.multiplyScalar(0.005);
                   mixers.push(object.mixer);
                   var action = object.mixer.clipAction(object.animations[0]);
                   action.play();
@@ -482,7 +498,7 @@ onResourcesLoaded = function () {
           object.rotation.z=0;
           scene.add(object);
                  }
-                
+
                   object.updateMatrix();
                 });
 
@@ -492,7 +508,7 @@ onResourcesLoaded = function () {
                 var loader = new THREE.FBXLoader();
                 loader.load(file1, function (object) {
                   object.mixer = new THREE.AnimationMixer(object);
-                  object.scale.multiplyScalar(0.005); 
+                  object.scale.multiplyScalar(0.005);
                   mixers.push(object.mixer);
                   var action = object.mixer.clipAction(object.animations[0]);
                   action.play();
@@ -502,10 +518,10 @@ onResourcesLoaded = function () {
                       child.receiveShadow = true;
                     }
                   });
-                  scene.add(object);        
+                  scene.add(object);
                   object.position.x = -8;
                   object.position.z = 1.5;
-                  object.rotation.set( 0.0, 3.5, 0.0 );  
+                  object.rotation.set( 0.0, 3.5, 0.0 );
                   //object.position.z += speed * delta;
                   object.updateMatrix();
                 });
@@ -516,7 +532,7 @@ onResourcesLoaded = function () {
                 var loader = new THREE.FBXLoader();
                 loader.load(file2, function (object) {
                   object.mixer = new THREE.AnimationMixer(object);
-                  object.scale.multiplyScalar(0.005); 
+                  object.scale.multiplyScalar(0.005);
                   mixers.push(object.mixer);
                   var action = object.mixer.clipAction(object.animations[0]);
                   action.play();
@@ -526,10 +542,10 @@ onResourcesLoaded = function () {
                       child.receiveShadow = true;
                     }
                   });
-                  scene.add(object);        
+                  scene.add(object);
                   object.position.x = -9;
                   object.position.z = 1.7;
-                  object.rotation.set( 0.0, 3.5, 0.0 );  
+                  object.rotation.set( 0.0, 3.5, 0.0 );
                   //object.position.z += speed * delta;
                   object.updateMatrix();
                 });
@@ -540,7 +556,7 @@ onResourcesLoaded = function () {
                 var loader = new THREE.FBXLoader();
                 loader.load(file4, function (object) {
                   object.mixer = new THREE.AnimationMixer(object);
-                  object.scale.multiplyScalar(0.005); 
+                  object.scale.multiplyScalar(0.005);
                   mixers.push(object.mixer);
                   var action = object.mixer.clipAction(object.animations[0]);
                   action.play();
@@ -550,9 +566,9 @@ onResourcesLoaded = function () {
                       child.receiveShadow = true;
                     }
                   });
-                  scene.add(object);        
+                  scene.add(object);
                   object.position.x = -7.5;
-                  object.rotation.set( 0.0, 3.5, 0.0 );  
+                  object.rotation.set( 0.0, 3.5, 0.0 );
                   //object.position.z += speed * delta;
                   object.updateMatrix();
                 });
@@ -593,8 +609,8 @@ animate = function () {
     cloudParticles.forEach(p => {
         p.rotation.z -=0.002;
       });
-    
-    
+
+
       if(Math.random() > 0.93 || flesh.power >100){
         if(flesh.power <100)
         flesh.position.set(
@@ -604,9 +620,9 @@ animate = function () {
         );
         flesh.power = 60 + Math.random()*500;
       }
-       
-   
-    
+
+
+
      rainGeo.vertices.forEach(p =>{
         p.velocity -= 0.1 + Math.random()*0.1;
         p.y += p.velocity;
@@ -616,7 +632,7 @@ animate = function () {
         }
       } );
       rainGeo.verticesNeedUpdate = true;
-    
+
 
 
     if (resourcesLoaded == false && !paused) {
@@ -641,12 +657,12 @@ animate = function () {
                 if (mixers.length > 0) {
                     zdelta = clock.getDelta();
                     for (var i = 0; i < mixers.length; i++) {
-                
+
                       mixers[i].update(delta);
                       //object.position.z += speed * delta;
                      }
-                
-                  }       
+
+                  }
 
     for (let bullet of bullets) {
         bullet.update();
@@ -676,7 +692,7 @@ skybox.rotation.y += 0.001;
 	//Position gun in front of player
 	meshes["gun"].position.set(
 		controls.getObject().position.x - Math.sin(controls.getObject().rotation.y - Math.PI / 4) * 0.3,
-		controls.getObject().position.y - 0.1,
+		controls.getObject().position.y - 0.1+Math.sin(delta)*0.04,
 		controls.getObject().position.z - Math.cos(controls.getObject().rotation.y - Math.PI / 4) * 0.3
 	);
 	meshes["gun"].rotation.y = controls.getObject().rotation.y + Math.PI;
